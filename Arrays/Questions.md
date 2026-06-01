@@ -112,3 +112,91 @@ class Solution {
 Complexity Analysis
 Time Complexity: O(m * n), because we still need to traverse every element in the matrix.
 Space Complexity: O(1), since we do not use any extra space aside from the matrix itself.
+
+
+2.  118. Pascal's Triangle
+class Solution {
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> prev = new ArrayList<>();
+        prev.add(1);
+        ans.add(prev);
+        if(numRows == 1){
+            
+            return ans;
+        }
+
+        for(int k=2;k<=numRows;k++){
+
+
+            List<Integer> curr = new ArrayList<>();
+            curr.add(1);
+            for(int i=1;i<prev.size();i++){
+                curr.add(prev.get(i) + prev.get(i-1));
+            }
+
+            curr.add(1);
+            ans.add(curr);
+            prev = curr;
+
+        }
+
+
+        return ans;
+        
+    }
+}
+
+3. Pascal's Triangle I
+class Solution {
+    public int pascalTriangleI(int r, int c) {
+        r = r-1;
+        c = c-1;
+
+        c= Math.min(r-c, c);
+
+        int mul = 1;
+
+        for(int i =1; i<=c;i++ ){
+            mul *= (r-i+1);
+            mul /= i;
+        }
+    
+
+        return mul;
+
+    }
+}
+
+class Solution {
+    // Function to print the element in rth row and cth column 
+    public static int pascalTriangleI(int r, int c) {
+        return nCr(r-1, c-1);
+    }
+    
+    // Function to calculate nCr
+    private static int nCr(int n, int r)  {
+        // Choose the smaller value for lesser iterations
+        if(r > n-r) r = n-r;
+        
+        // base case
+        if(r == 1) return n;
+        
+        int res = 1; // to store the result 
+        
+        // Calculate nCr using iterative method avoiding overflow 
+        for (int i = 0; i < r; i++) {
+            res = res * (n - i);
+            res = res / (i + 1);
+        }
+        
+        return res; // return the result 
+    }
+};
+
+Complexity Analysis:
+Time Complexity: O(C), where C is the column number. This is because the loop in the nCr function runs for a total of C times, where C can be as large as N/2.
+
+Space Complexity: O(1), as no extra space is used.
+
+4. 
