@@ -147,7 +147,7 @@ class Solution {
     }
 }
 
-3. Pascal's Triangle I
+2.2. Pascal's Triangle I
 class Solution {
     public int pascalTriangleI(int r, int c) {
         r = r-1;
@@ -193,10 +193,480 @@ class Solution {
         return res; // return the result 
     }
 };
-
 Complexity Analysis:
 Time Complexity: O(C), where C is the column number. This is because the loop in the nCr function runs for a total of C times, where C can be as large as N/2.
 
 Space Complexity: O(1), as no extra space is used.
 
-4. 
+3. Next Permutation
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int n = nums.length;
+
+        // To store the index of the first smaller element from right
+        int idx=-1;
+
+        //1. Find the first index from the end where nums[i] < nums[i+1]
+        //nums[i]<nums[i+1]
+        for(int i=n-2;i>=0;i--){
+            if(nums[i]<nums[i+1]){
+                idx=i;
+                break;
+            }
+        }
+
+        //2. Find the element just greater than nums[ind] from the end
+        if(idx!=-1){
+            int swapIdx = idx;
+            for(int j = n-1; j>idx; j--){
+                if(nums[j] > nums[idx]){
+                    swapIdx = j;
+                    break;
+                }
+            }
+            swap(nums,idx,swapIdx);
+        }
+
+        //3. Reverse the right half to get the next smallest permutation
+        reverse(nums,idx+1,n-1);
+        
+    }
+
+    private void reverse(int nums[], int i, int j){
+        while(i<j){
+            swap(nums,i,j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int nums[], int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+
+}
+Complexity Analysis
+Time Complexity: O(N), where N is the size of the input array.
+Finding the pivot takes O(N) time. Finding the next greater element also takes O(N) in the worst case. And, reversing the subarray takes O(N). All this adds up to a total of O(N) time complexity.
+
+Space Complexity: O(1), as the modification is done in-place and no extra data structure was used apart from a few variables.
+
+Brute Force App: solution by tuf
+
+class Solution {
+
+    // Function to get the next permutation of given array
+    public void nextPermutation(int[] nums) {
+        // Get all the Permutations
+        List<List<Integer>> ans = getAllPermutations(nums);
+
+        int index = -1; // Current permutation index
+
+        /* Perform a linear search to get the
+        permutation of current permutation */
+        for(int i = 0; i < ans.size(); i++) {
+            if(match(nums, ans.get(i))) {
+                index = i;
+                break;
+            }
+        }
+
+        // Next Permutation index
+        int nextPermutationIndex = -1;
+        if(index == ans.size() - 1) nextPermutationIndex =  0;
+        else nextPermutationIndex = index+1;
+
+        // Store the next permutation in-place
+        for(int i = 0; i < nums.length; i++) {
+            nums[i] = ans.get(nextPermutationIndex).get(i);
+        }
+
+        return;
+    }
+
+    /* Function to generate all permutations of 
+    the given array in sorted order */
+    private List<List<Integer>> getAllPermutations(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>(); // To store the permutation
+
+        // Recursive Helper function call 
+        helperFunc(0, nums, ans);
+
+        // Sort the result
+        Collections.sort(ans, (a, b) -> {
+            for(int i = 0; i < a.size(); i++) {
+                if(!a.get(i).equals(b.get(i))) {
+                    return a.get(i) - b.get(i);
+                }
+            }
+            return 0;
+        });
+
+        return ans; // Return the result
+    }
+
+    // Helper function to get all the permutations of the given array
+    private void helperFunc(int ind, int[] nums, List<List<Integer>> ans) {
+
+        // Base case
+        if(ind == nums.length) {
+            // Add the permutation to the answer
+            List<Integer> temp = new ArrayList<>();
+            for(int num : nums) temp.add(num);
+            ans.add(temp);
+            return;
+        }
+
+        // Traverse the array
+        for(int i = ind; i < nums.length; i++) {
+            swap(nums, ind, i); // Swap-In
+
+            // Recursively call the helper function
+            helperFunc(ind + 1, nums, ans);
+
+            swap(nums, ind, i); // Swap-Out
+        }
+
+        return;
+    }
+
+    // Function to swap two numbers
+    private void swap(int[] nums, int i, int j) {
+        int t = nums[i];
+        nums[i] = nums[j];
+        nums[j] = t;
+    }
+
+    // Function to match two arrays
+    private boolean match(int[] nums, List<Integer> list) {
+        for(int i = 0; i < nums.length; i++) {
+            if(nums[i] != list.get(i)) return false;
+        }
+        return true;
+    }
+}
+Time Complexity: O(N × N!)
+Space Complexity: O(N × N!)
+
+
+4. Maximum Subarray (Kadane Algo)
+
+Brute:
+ // Function to find maximum sum of subarrays
+    public int maxSubArray(int[] nums) {
+        
+        /* Initialize maximum sum with 
+        the smallest possible integer*/
+        int maxi = Integer.MIN_VALUE; 
+
+        // Iterate over each starting index of subarrays
+        for (int i = 0; i < nums.length; i++) {
+            
+            /* Iterate over each ending index
+            of subarrays starting from i*/
+            for (int j = i; j < nums.length; j++) {
+                
+                // Variable to store the sum of the current subarray
+                int sum = 0; 
+
+                // Calculate the sum of subarray nums[i...j]
+                for (int k = i; k <= j; k++) {
+                    sum += nums[k];
+                }
+
+                /* Update maxi with the maximum of its current 
+                value and the sum of the current subarray*/
+                maxi = Math.max(maxi, sum);
+                
+            }
+        }
+        
+        // Return the maximum subarray sum found
+        return maxi; 
+    }
+}
+
+Better:
+ // Function to find maximum sum of subarrays
+    public int maxSubArray(int[] nums) {
+        
+        /* Initialize maximum sum with
+        the smallest possible integer*/
+        int maxi = Integer.MIN_VALUE;
+
+        // Iterate over each starting index of subarrays
+        for (int i = 0; i < nums.length; i++) {
+            
+            /* Variable to store the sum
+            of the current subarray*/
+            int sum = 0; 
+            
+            /* Iterate over each ending index
+            of subarrays starting from i*/
+            for (int j = i; j < nums.length; j++) {
+                
+                /* Add the current element nums[j] to
+                the sum i.e. sum of nums[i...j-1]*/
+                sum += nums[j];
+
+                /* Update maxi with the maximum of its current
+                value and the sum of the current subarray*/
+                maxi = Math.max(maxi, sum);
+            }
+        }
+
+        // Return the maximum subarray sum found
+        return maxi;
+    }
+
+Optimal Solutions:
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = Integer.MIN_VALUE;
+        int currSum = 0;
+
+        for(int i=0;i<nums.length;i++){
+            currSum = Math.max(currSum+nums[i], nums[i]);
+            maxSum = Math.max(maxSum, currSum);
+        }
+
+        return maxSum;
+    }
+}
+
+// Function to find maximum sum of subarrays
+    public int maxSubArray(int[] nums) {
+        
+        // maximum sum
+        long maxi = Long.MIN_VALUE; 
+        
+        //current sum of subarray 
+        long sum = 0; 
+        
+        // Iterate through the array
+        for (int i = 0; i < nums.length; i++) {
+            
+            // Add current element to the sum
+            sum += nums[i]; 
+            
+            // Update maxi if current sum is greater
+            if (sum > maxi) {
+                maxi = sum; 
+            }
+            
+            // Reset sum to 0 if it becomes negative
+            if (sum < 0) {
+                sum = 0; 
+            }
+        }
+        
+        // Return the maximum subarray sum found
+        return (int) maxi;
+    }
+
+
+Follow up question
+Can you print the subarray that has the max sum ?
+// Function to find maximum sum of subarrays and print the subarray having maximum sum
+    public int maxSubArray(int[] nums) {
+        
+        // maximum sum
+        long maxi = Long.MIN_VALUE; 
+        
+        // current sum of subarray
+        long sum = 0; 
+        
+        // starting index of current subarray
+        int start = 0; 
+        
+        // indices of the maximum sum subarray
+        int ansStart = -1, ansEnd = -1; 
+        
+        // Iterate through the array
+        for (int i = 0; i < nums.length; i++) {
+            
+            // update starting index if sum is reset
+            if (sum == 0) {
+                start = i;
+            }
+            
+            // add current element to the sum
+            sum += nums[i]; 
+            
+            /* Update maxi and subarray indices
+            if current sum is greater */
+            if (sum > maxi) {
+                maxi = sum;
+                ansStart = start;
+                ansEnd = i;
+            }
+            
+            // Reset sum to 0 if it becomes negative
+            if (sum < 0) {
+                sum = 0;
+            }
+        }
+        
+        // Printing the subarray
+        System.out.print("The subarray is: [");
+        for (int i = ansStart; i <= ansEnd; i++) {
+            System.out.print(nums[i] + " ");
+        }
+        System.out.println("]");
+
+        // Return the maximum subarray sum found
+        return (int) maxi;
+    }
+
+
+5. Sort Colors
+My Solution:
+class Solution {
+    public void sortColors(int[] nums) {
+        int zeroPtr = 0, twoPtr = nums.length-1;
+        int mid = 0;
+
+        while(mid<=twoPtr){
+            if(nums[mid] == 1){
+                mid++;
+            }else if(nums[mid]==0){
+                swap(nums,mid,zeroPtr);
+                zeroPtr++;
+                mid++;
+            }else{
+                swap(nums,mid,twoPtr);
+                twoPtr--;
+            }
+        }
+        
+    }
+
+    private void swap(int nums[], int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+Brute:
+class Solution {
+    // Function to sort the array
+    public void sortZeroOneTwo(int[] nums) {
+        // Sort the array using Arrays.sort
+        Arrays.sort(nums);
+    }
+}
+Complexity Analysis 
+Time Complexity: O(NxlogN), where N is the size of the array. As the optimal sorting take O(N * logN) time.
+
+Space Complexity: O(1) no extra space is used to solve the problem.
+
+Better:
+ // Function to sort the array containing only 0s, 1s, and 2s
+    public void sortZeroOneTwo(int[] nums) {
+        int cnt0 = 0, cnt1 = 0, cnt2 = 0;
+
+        // Counting the number of 0s, 1s, and 2s in the array
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) cnt0++;
+            else if (nums[i] == 1) cnt1++;
+            else cnt2++;
+        }
+
+        /* Placing the elements in the
+           original array based on counts */
+        // placing 0's
+        for (int i = 0; i < cnt0; i++) nums[i] = 0;
+
+        // placing 1's
+        for (int i = cnt0; i < cnt0 + cnt1; i++) nums[i] = 1; 
+        
+        // placing 2's
+        for (int i = cnt0 + cnt1; i < nums.length; i++) nums[i] = 2;
+    }
+
+    Complexity Analysis 
+Time Complexity: O(N)+O(N) = O(2N), where N is the size of the array. There are 2 traversals in the array to count the frequencies then in second iteration we are overwriting.
+
+Space Complexity: O(1) no extra space used.
+
+
+Optimal:
+
+ // Function to sort the array containing only 0s, 1s, and 2s
+    public void sortZeroOneTwo(int[] nums) {
+        // 3 pointers: low, mid, high
+        int low = 0, mid = 0, high = nums.length - 1;
+        
+        while (mid <= high) {
+            if (nums[mid] == 0) {
+                
+                /* Swap nums[low] and nums[mid], then 
+                move both low and mid pointers forward*/
+                int temp = nums[low];
+                nums[low] = nums[mid];
+                nums[mid] = temp;
+                low++;
+                mid++;
+                
+            } else if (nums[mid] == 1) {
+                // Move mid pointer forward
+                mid++;
+            } else {
+                /* Swap nums[mid] and nums[high], 
+                then move high pointer backward*/
+                int temp = nums[mid];
+                nums[mid] = nums[high];
+                nums[high] = temp;
+                high--;
+            }
+        }
+    }
+Complexity Analysis 
+Time Complexity: O(N), where N is the size of the array, as there is single traversal of the array.
+
+Space Complexity: O(1), no extra space is used.
+
+6. Best Time to Buy and Sell Stock
+class Solution {
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int minPrefix[] = new int[n];
+        minPrefix[0] = prices[0];
+
+        for(int i=1;i<n;i++){
+            minPrefix[i] = Math.min(minPrefix[i-1],prices[i]);
+        }
+
+        int maxProfit = 0;
+        for(int i=n-1;i>=0;i--){
+            maxProfit = Math.max(maxProfit, prices[i]-minPrefix[i]);
+        }
+
+        return maxProfit;
+        
+    }
+}
+
+class Solution {
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+
+        for(int i=0;i<prices.length;i++){
+            minPrice = Math.min(prices[i], minPrice);
+            maxProfit = Math.max(maxProfit, prices[i]-minPrice);
+        }
+        
+        return maxProfit;
+        
+    }
+}
+
+Complexity Analysis:
+Time Complexity:O(N), As the whole array is being traversed only once.
+
+Space Complexity:O(1), As no extra space is being used.
