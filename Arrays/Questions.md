@@ -670,3 +670,67 @@ Complexity Analysis:
 Time Complexity:O(N), As the whole array is being traversed only once.
 
 Space Complexity:O(1), As no extra space is being used.
+
+7. Rotate matrix by 90 degrees
+
+class Solution {
+    public void rotateMatrix(int[][] matrix) {
+        int n = matrix.length;
+        int temp[][] = new int[n][n];
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                temp[j][n-i-1] = matrix[i][j];
+            }
+        }
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                matrix[i][j]  = temp[i][j];
+            }
+        }
+    }
+}
+Complexity Analysis 
+Time Complexity: O(N2) +O(N2), to linearly iterate and put elements into dummy matrix and another O(N2) to copy elements of dummy matrix back to original matrix.
+
+Space Complexity: O(N2), to store the elements in the dummy matrix.
+
+Optimize:
+
+//Rotate the given matrix by 90 degrees clockwise.
+    
+    public void rotateMatrix(int[][] matrix) {
+        int n = matrix.length;
+        
+        // Transpose the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                
+                // Swap elements across the diagonal
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+                
+            }
+        }
+        
+        // Reverse each row of the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n / 2; j++) {
+                
+                // Swap elements symmetrically
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[i][n - 1 - j];
+                matrix[i][n - 1 - j] = temp;
+                
+            }
+        }
+    }
+
+    Complexity Analysis 
+Time Complexity: O(N2) +O(N2), to linearly iterate and find transpose of the matrix and another O(N2) to find the reverse of each row.
+
+Space Complexity: O(1), as no extra space is being used.
+
+8. 
