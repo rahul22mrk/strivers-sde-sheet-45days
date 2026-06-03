@@ -733,4 +733,97 @@ Time Complexity: O(N2) +O(N2), to linearly iterate and find transpose of the mat
 
 Space Complexity: O(1), as no extra space is being used.
 
-8. 
+8. Merge Overlapping Subintervals
+Brute:
+public List<List<Integer>> mergeOverlap(List<List<Integer>> arr) {
+        // Get the initial number of intervals
+        int n = (int) arr.size();
+        // If there are 0 or 1 intervals, no merging is needed
+        if (n <= 1) return arr;
+
+        // Flag to track whether any merge happened in the last pass
+        boolean mergedSomething = true;
+        // Keep repeating passes until a full pass finds no merge
+        while (mergedSomething) {
+            // Reset the flag at the start of each pass
+            mergedSomething = false;
+            // Iterate over all interval indices i
+            for (int i = 0; i < arr.size() && !mergedSomething; ++i) {
+                // For each i, check all j > i to find an overlapping pair
+                for (int j = i + 1; j < arr.size(); ++j) {
+                    // Extract start and end of interval i
+                    int a1 = arr.get(i).get(0);
+                    // Extract start and end of interval i (end)
+                    int b1 = arr.get(i).get(1);
+                    // Extract start of interval j
+                    int a2 = arr.get(j).get(0);
+                    // Extract end of interval j
+                    int b2 = arr.get(j).get(1);
+
+                    // Check if intervals i and j overlap (not (i ends before j starts or j ends before i starts))
+                    if (!(b1 < a2 || b2 < a1)) {
+                        // Compute merged start as the minimum of the two starts
+                        int ns = Math.min(a1, a2);
+                        // Compute merged end as the maximum of the two ends
+                        int ne = Math.max(b1, b2);
+                        // Replace interval i with the merged interval
+                        arr.get(i).set(0, ns);
+                        arr.get(i).set(1, ne);
+                        // Remove interval j since it is now merged into i
+                        arr.remove(j);
+                        // Mark that a merge happened to trigger another pass
+                        mergedSomething = true;
+                        // Break to restart scanning from the beginning in the next pass
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Return the fully merged list of intervals
+        return arr;
+    }
+    Complexity Analysis:
+Time Complexity: O(N2), where N is the size of the array.
+In the worst case, each merge requires scanning the entire list again. For N intervals, this can lead to repeated scans after each merge, resulting in O(N2) time complexity.
+
+Space Complexity: O(1), as only a few extra variables and a flag are used.
+
+optimize:
+
+public List<List<Integer>> mergeOverlap(List<List<Integer>> intervals) {
+
+        // If the list is empty, return an empty result
+        if (intervals.size() == 0) return new ArrayList<>();
+
+        // Step 1: Sort intervals based on start time
+        intervals.sort((a, b) -> Integer.compare(a.get(0), b.get(0)));
+
+        // Step 2: List to store merged intervals
+        List<List<Integer>> result = new ArrayList<>();
+
+        // Add the first interval
+        result.add(new ArrayList<>(intervals.get(0)));
+
+        // Iterate through remaining intervals
+        for (int i = 1; i < intervals.size(); i++) {
+
+            List<Integer> last = result.get(result.size() - 1);  // Last merged interval
+            List<Integer> curr = intervals.get(i);               // Current interval
+
+            // Overlap condition
+            if (curr.get(0) <= last.get(1)) {
+                // Merge
+                last.set(1, Math.max(last.get(1), curr.get(1)));
+            } else {
+                // No overlap → add new interval
+                result.add(new ArrayList<>(curr));
+            }
+        }
+
+        return result;
+    }
+
+    Complexity Analysis
+Time Complexity: O(n log n) for sorting the intervals, plus O(n) for iterating over them. Thus, the total time complexity is O(n log n).
+Space Complexity: O(n) for storing the merged intervals.
