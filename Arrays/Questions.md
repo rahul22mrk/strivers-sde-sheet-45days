@@ -1,4 +1,4 @@
-1. 73. Set Matrix Zeroes
+1. Set Matrix Zeroes
 
 Intuition
 We can use extra arrays (or markers) to remember which rows and columns need to be set to zero. This avoids overwriting values prematurely, and we only modify the matrix after scanning the entire matrix.
@@ -114,7 +114,7 @@ Time Complexity: O(m * n), because we still need to traverse every element in th
 Space Complexity: O(1), since we do not use any extra space aside from the matrix itself.
 
 
-2.  118. Pascal's Triangle
+2. Pascal's Triangle
 class Solution {
     public List<List<Integer>> generate(int numRows) {
         List<List<Integer>> ans = new ArrayList<>();
