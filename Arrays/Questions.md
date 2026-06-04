@@ -1067,4 +1067,323 @@ Because a single linear traversal is performed from the end of both arrays, with
 Space Complexity: O(1), as only couple of variables are used.
     
 
-10. 
+10. Find the Duplicate Number
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int freq[] = new int[nums.length+1];
+
+        for(int i=0;i<nums.length;i++){
+            freq[nums[i]]++;
+
+            if(freq[nums[i]]>1) return nums[i];
+        }
+        
+        return -1;
+    }
+}
+
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+
+        while(true){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+
+            if(slow == fast) break;
+        }
+
+        slow = nums[0];
+
+        while(slow!=fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+}
+
+Time and Space Complexity
+Time Complexity: O(n), the cycle is detected in linear time and entry point is also found in linear time.
+Space Complexity: O(1), we use constant additional space to find duplicate element.
+
+11. Find the repeating and missing number
+
+class Solution {
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+        int freq[] = new int[nums.length+1];
+
+        for(int i=0;i<nums.length;i++){
+            freq[nums[i]]++;
+        }
+
+        int missedNum = -1, repeatedNum = -1;
+        for(int i=1;i<=nums.length;i++){
+
+            if(freq[i]==0) missedNum = i;
+
+            if(freq[i]>1) repeatedNum = i;
+
+             if (repeatedNum != -1 && missedNum != -1) {
+                break;
+            }
+        }
+
+        return new int[]{repeatedNum,missedNum};
+
+    }
+}
+
+
+class Solution {
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+
+        int missing = -1;
+        int repeating = -1;
+
+        for (int i = 0; i < nums.length; i++) {
+
+            // Map value x to index (x - 1)
+            int idx = Math.abs(nums[i]) - 1;
+
+            if (nums[idx] > 0) {
+                nums[idx] = -nums[idx]; // mark as visited
+            } else {
+                repeating = idx + 1; // already visited => duplicate
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+
+            // positive index was never visited
+            if (nums[i] > 0) {
+                missing = i + 1;
+                break;
+            }
+        }
+
+        return new int[]{repeating, missing};
+    }
+}
+
+
+ // Function to find repeating and missing numbers
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+        int n = nums.length; // Size of the array
+        int repeating = -1, missing = -1;
+
+        // Find the repeating and missing number:
+        for (int i = 1; i <= n; i++) {
+            // Count the occurrences:
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                if (nums[j] == i) cnt++;
+            }
+
+            // Check if i is repeating or missing
+            if (cnt == 2) repeating = i;
+            else if (cnt == 0) missing = i;
+
+            /* If both repeating and missing
+            are found, break out of loop*/
+            if (repeating != -1 && missing != -1)
+                break;
+        }
+
+        // Return {repeating, missing}
+        return new int[] {repeating, missing};
+    }
+
+    Complexity Analysis 
+Time Complexity: O(N2), where N is the size of the array. Since we are using nested loops to count occurrences of every element between 1 to N.
+
+Space Complexity: O(1) as no extra space is used.
+
+
+
+12. Count Inversions
+
+class Solution {
+    public long numberOfInversions(int[] nums) {
+        int ans = 0 ;
+
+        for(int i=0;i<nums.length;i++){
+            for(int j=i+1;j<nums.length;j++){
+                if(nums[i]>nums[j]){
+                    ans++;
+                }
+            }
+        }
+        
+        return ans;
+
+    }
+}
+class Solution {
+    public long numberOfInversions(int[] nums) {
+        return mergeSort(nums,0,nums.length-1);
+    }
+
+    private long mergeSort(int nums[], int low, int high ){
+        long cnt = 0;
+
+        if(low < high){
+            int mid = low + (high-low)/2;
+
+            cnt += mergeSort(nums, low, mid);
+
+            cnt += mergeSort(nums, mid+1, high);
+            cnt += merge(nums, low, mid, high);
+        }
+        
+        return cnt;
+    }
+
+    private long merge(int nums[], int low, int mid, int high){
+        int[] temp = new int[high-low+1];
+
+        int left = low, right = mid+1, idx = 0;
+
+        long cnt = 0;
+        while(left <= mid && right <= high){
+            if(nums[left] <= nums[right]){
+                temp[idx++] = nums[left++];
+            }else{
+                temp[idx++] = nums[right++];
+                cnt += (mid - left + 1);
+            }
+        } 
+
+        while(left <= mid){
+            temp[idx++] = nums[left++];
+        }
+
+        while(right <= high){
+            temp[idx++] = nums[right++];
+        }
+
+        idx = 0;
+        for(int i=low; i<=high;i++){
+            nums[i] = temp[idx++];
+        }
+        return cnt;
+    }
+}
+
+13. Search in a 2D matrix
+
+ //Function to search for a given target in matrix
+    public boolean searchMatrix(int[][] mat, int target) {
+        // Check if the matrix is empty
+        if (mat.length == 0 || mat[0].length == 0) {
+            return false;
+        }
+        
+        int n = mat.length;  
+        int m = mat[0].length; 
+        
+        // Traverse the matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == target) {
+                    // Return true if target is found
+                    return true; 
+                }
+            }
+        }
+        // Return false if target is not found
+        return false; 
+    }
+Complexity Analysis: 
+Time Complexity: O(N X M), where N is the number of rows in the matrix, M is the number of columns in each row. As, nested loops are being used to traverse the matrix.
+
+Space Complexity: As no additional space is used, so the Space Complexity is O(1).
+
+    class Solution {
+    public boolean searchMatrix(int[][] mat, int target) {
+        
+        for(int i=0; i<mat.length; i++){
+            while(mat[i][0]<=target && mat[i][mat[i].length-1]>=target){
+               return binarySearch(mat[i], target);
+            }
+        }
+
+        return false;
+
+    }
+
+    private boolean binarySearch(int arr[], int target){
+        int low = 0, high = arr.length-1;
+
+        while(low<=high){
+            int mid = low + (high - low)/2;
+
+            if(arr[mid] == target){
+                return true;
+            }else if(arr[mid]<target){
+                low = mid+1;
+            }else{
+                high = mid -1;
+            }
+        }
+        return false;
+    }
+}
+Complexity Analysis: 
+Time Complexity: O(N + logM), where N is given row number, M is given column number. The rows are traversed in O(N) time complexity. Binary search is applied only once for a particular row, resulting in a time complexity of O(N + logM) instead of O(N*logM).
+
+Space Complexity: As no additional space is used, so the Space Complexity is O(1).
+
+ // Function to search for a given target in matrix
+    public boolean searchMatrix(int[][] mat, int target) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        int low = 0, high = n * m - 1;
+        
+        // Perform binary search
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            
+            // Calculate the row and column
+            int row = mid / m;
+            int col = mid % m;
+            
+            // If target is found return true
+            if (mat[row][col] == target) return true;
+            else if (mat[row][col] < target) low = mid + 1;
+            else high = mid - 1;
+        }
+        
+        // Return false if target is not found
+        return false; 
+    }
+    
+Time Complexity: O(log(N*M)), where N is the number of rows in the matrix, M is the number of columns in each row. As, binary search is being applied on the 1-D array of size N*M.
+
+Space Complexity: As no additional space is used, so the Space Complexity is O(1).
+
+
+14. Pow(x, n)
+
+15. Majority Element-I
+
+16. Majority Element-II
+
+17. Grid unique paths
+
+18. Reverse Pairs
+
+19. Two Sum
+
+20. 4 Sum
+
+21. Longest Consecutive Sequence in an Array
+
+22. Largest Subarray with K sum
+
+23. Count subarrays with given xor K
+
+24. Longest Substring Without Repeating Characters
