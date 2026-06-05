@@ -1,6 +1,6 @@
 # 📒 Striver SDE Sheet - Complete Notes
 
-> **Interactive Revision Guide** — Click ▶ to expand solutions. All solutions included (Brute → Better → Optimal). Organized by Pattern & Sequence.
+> **Interactive Revision Guide** — Click ▶ to expand solutions. ALL solutions included (Brute → Better → Optimal). Organized by Pattern & Sequence.
 
 ---
 
@@ -283,7 +283,7 @@ class Solution {
 };
 ```
 
-**Time Complexity:** O(C), where C is the column number. The loop runs for a total of C times, where C can be as large as N/2.
+**Time Complexity:** O(C), where C is the column number.
 
 **Space Complexity:** O(1), as no extra space is used.
 </details>
@@ -433,9 +433,7 @@ class Solution {
 }
 ```
 
-**Time Complexity:** O(N) — Finding pivot O(N) + Finding next greater O(N) + Reversing O(N)
-
-**Space Complexity:** O(1), as the modification is done in-place and no extra data structure was used apart from a few variables.
+**Time Complexity:** O(N) | **Space Complexity:** O(1)
 </details>
 
 ---
@@ -449,25 +447,14 @@ class Solution {
 ```java
 // Function to find maximum sum of subarrays
 public int maxSubArray(int[] nums) {
-    /* Initialize maximum sum with 
-    the smallest possible integer*/
     int maxi = Integer.MIN_VALUE; 
 
-    // Iterate over each starting index of subarrays
     for (int i = 0; i < nums.length; i++) {
-        /* Iterate over each ending index
-        of subarrays starting from i*/
         for (int j = i; j < nums.length; j++) {
-            // Variable to store the sum of the current subarray
             int sum = 0; 
-
-            // Calculate the sum of subarray nums[i...j]
             for (int k = i; k <= j; k++) {
                 sum += nums[k];
             }
-
-            /* Update maxi with the maximum of its current 
-            value and the sum of the current subarray*/
             maxi = Math.max(maxi, sum);
         }
     }
@@ -483,25 +470,12 @@ public int maxSubArray(int[] nums) {
 ```java
 // Function to find maximum sum of subarrays
 public int maxSubArray(int[] nums) {
-    /* Initialize maximum sum with
-    the smallest possible integer*/
     int maxi = Integer.MIN_VALUE;
 
-    // Iterate over each starting index of subarrays
     for (int i = 0; i < nums.length; i++) {
-        /* Variable to store the sum
-        of the current subarray*/
         int sum = 0; 
-        
-        /* Iterate over each ending index
-        of subarrays starting from i*/
         for (int j = i; j < nums.length; j++) {
-            /* Add the current element nums[j] to
-            the sum i.e. sum of nums[i...j-1]*/
             sum += nums[j];
-
-            /* Update maxi with the maximum of its current
-            value and the sum of the current subarray*/
             maxi = Math.max(maxi, sum);
         }
     }
@@ -537,29 +511,21 @@ class Solution {
 ```java
 // Function to find maximum sum of subarrays
 public int maxSubArray(int[] nums) {
-    // maximum sum
     long maxi = Long.MIN_VALUE; 
-    
-    //current sum of subarray 
     long sum = 0; 
     
-    // Iterate through the array
     for (int i = 0; i < nums.length; i++) {
-        // Add current element to the sum
         sum += nums[i]; 
         
-        // Update maxi if current sum is greater
         if (sum > maxi) {
             maxi = sum; 
         }
         
-        // Reset sum to 0 if it becomes negative
         if (sum < 0) {
             sum = 0; 
         }
     }
     
-    // Return the maximum subarray sum found
     return (int) maxi;
 }
 ```
@@ -571,37 +537,24 @@ public int maxSubArray(int[] nums) {
 ```java
 // Function to find maximum sum of subarrays and print the subarray having maximum sum
 public int maxSubArray(int[] nums) {
-    // maximum sum
     long maxi = Long.MIN_VALUE; 
-    
-    // current sum of subarray
     long sum = 0; 
-    
-    // starting index of current subarray
     int start = 0; 
-    
-    // indices of the maximum sum subarray
     int ansStart = -1, ansEnd = -1; 
     
-    // Iterate through the array
     for (int i = 0; i < nums.length; i++) {
-        // update starting index if sum is reset
         if (sum == 0) {
             start = i;
         }
         
-        // add current element to the sum
         sum += nums[i]; 
         
-        /* Update maxi and subarray indices
-        if current sum is greater */
         if (sum > maxi) {
             maxi = sum;
             ansStart = start;
             ansEnd = i;
         }
         
-        // Reset sum to 0 if it becomes negative
         if (sum < 0) {
             sum = 0;
         }
@@ -614,7 +567,6 @@ public int maxSubArray(int[] nums) {
     }
     System.out.println("]");
 
-    // Return the maximum subarray sum found
     return (int) maxi;
 }
 ```
@@ -632,7 +584,6 @@ public int maxSubArray(int[] nums) {
 class Solution {
     // Function to sort the array
     public void sortZeroOneTwo(int[] nums) {
-        // Sort the array using Arrays.sort
         Arrays.sort(nums);
     }
 }
@@ -649,15 +600,12 @@ class Solution {
 public void sortZeroOneTwo(int[] nums) {
     int cnt0 = 0, cnt1 = 0, cnt2 = 0;
 
-    // Counting the number of 0s, 1s, and 2s in the array
     for (int i = 0; i < nums.length; i++) {
         if (nums[i] == 0) cnt0++;
         else if (nums[i] == 1) cnt1++;
         else cnt2++;
     }
 
-    /* Placing the elements in the
-       original array based on counts */
     // placing 0's
     for (int i = 0; i < cnt0; i++) nums[i] = 0;
 
@@ -710,24 +658,18 @@ class Solution {
 ```java
 // Function to sort the array containing only 0s, 1s, and 2s
 public void sortZeroOneTwo(int[] nums) {
-    // 3 pointers: low, mid, high
     int low = 0, mid = 0, high = nums.length - 1;
     
     while (mid <= high) {
         if (nums[mid] == 0) {
-            /* Swap nums[low] and nums[mid], then 
-            move both low and mid pointers forward*/
             int temp = nums[low];
             nums[low] = nums[mid];
             nums[mid] = temp;
             low++;
             mid++;
         } else if (nums[mid] == 1) {
-            // Move mid pointer forward
             mid++;
         } else {
-            /* Swap nums[mid] and nums[high], 
-            then move high pointer backward*/
             int temp = nums[mid];
             nums[mid] = nums[high];
             nums[high] = temp;
@@ -737,7 +679,7 @@ public void sortZeroOneTwo(int[] nums) {
 }
 ```
 
-**Time Complexity:** O(N), single traversal | **Space Complexity:** O(1)
+**Time Complexity:** O(N) | **Space Complexity:** O(1)
 </details>
 
 ---
@@ -835,7 +777,6 @@ public void rotateMatrix(int[][] matrix) {
     // Transpose the matrix
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < i; j++) {
-            // Swap elements across the diagonal
             int temp = matrix[i][j];
             matrix[i][j] = matrix[j][i];
             matrix[j][i] = temp;
@@ -845,7 +786,6 @@ public void rotateMatrix(int[][] matrix) {
     // Reverse each row of the matrix
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n / 2; j++) {
-            // Swap elements symmetrically
             int temp = matrix[i][j];
             matrix[i][j] = matrix[i][n - 1 - j];
             matrix[i][n - 1 - j] = temp;
@@ -867,27 +807,19 @@ public void rotateMatrix(int[][] matrix) {
 
 ```java
 public List<List<Integer>> mergeOverlap(List<List<Integer>> arr) {
-    // Get the initial number of intervals
     int n = (int) arr.size();
-    // If there are 0 or 1 intervals, no merging is needed
     if (n <= 1) return arr;
 
-    // Flag to track whether any merge happened in the last pass
     boolean mergedSomething = true;
-    // Keep repeating passes until a full pass finds no merge
     while (mergedSomething) {
-        // Reset the flag at the start of each pass
         mergedSomething = false;
-        // Iterate over all interval indices i
         for (int i = 0; i < arr.size() && !mergedSomething; ++i) {
-            // For each i, check all j > i to find an overlapping pair
             for (int j = i + 1; j < arr.size(); ++j) {
                 int a1 = arr.get(i).get(0);
                 int b1 = arr.get(i).get(1);
                 int a2 = arr.get(j).get(0);
                 int b2 = arr.get(j).get(1);
 
-                // Check if intervals i and j overlap
                 if (!(b1 < a2 || b2 < a1)) {
                     int ns = Math.min(a1, a2);
                     int ne = Math.max(b1, b2);
@@ -915,26 +847,18 @@ public List<List<Integer>> mergeOverlap(List<List<Integer>> arr) {
 public List<List<Integer>> mergeOverlap(List<List<Integer>> intervals) {
     if (intervals.size() == 0) return new ArrayList<>();
 
-    // Step 1: Sort intervals based on start time
     intervals.sort((a, b) -> Integer.compare(a.get(0), b.get(0)));
 
-    // Step 2: List to store merged intervals
     List<List<Integer>> result = new ArrayList<>();
-
-    // Add the first interval
     result.add(new ArrayList<>(intervals.get(0)));
 
-    // Iterate through remaining intervals
     for (int i = 1; i < intervals.size(); i++) {
-        List<Integer> last = result.get(result.size() - 1);  // Last merged interval
-        List<Integer> curr = intervals.get(i);               // Current interval
+        List<Integer> last = result.get(result.size() - 1);
+        List<Integer> curr = intervals.get(i);
 
-        // Overlap condition
         if (curr.get(0) <= last.get(1)) {
-            // Merge
             last.set(1, Math.max(last.get(1), curr.get(1)));
         } else {
-            // No overlap → add new interval
             result.add(new ArrayList<>(curr));
         }
     }
@@ -957,7 +881,6 @@ class Solution {
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
 
         List<int[]> ans = new ArrayList<>();
-
         ans.add(intervals[0]);
 
         for (int i = 1; i < intervals.length; i++) {
@@ -1026,14 +949,11 @@ class Solution {
 ```java
 // Function to merge two sorted arrays nums1 and nums2
 public void merge(int[] nums1, int m, int[] nums2, int n) {
-    // Declare a 3rd array and 2 pointers:
     int[] merged = new int[m + n];
     int left = 0;
     int right = 0;
     int index = 0;
 
-    /* Insert elements from nums1 and nums2 into
-    merged array using left and right pointers */
     while (left < m && right < n) {
         if (nums1[left] <= nums2[right]) {
             merged[index++] = nums1[left++];
@@ -1042,18 +962,14 @@ public void merge(int[] nums1, int m, int[] nums2, int n) {
         }
     }
 
-    // If right pointer reaches the end of nums2:
     while (left < m) {
         merged[index++] = nums1[left++];
     }
 
-    // If left pointer reaches the end of nums1:
     while (right < n) {
         merged[index++] = nums2[right++];
     }
 
-    /* Copy elements from merged array
-    array back to nums1 */
     for (int i = 0; i < m + n; i++) {
         nums1[i] = merged[i];
     }
@@ -1069,7 +985,776 @@ public void merge(int[] nums1, int m, int[] nums2, int n) {
 ```java
 // Function to merge two sorted arrays nums1 and nums2
 public void merge(int[] nums1, int m, int[] nums2, int n) {
-    // Pointer for nums1 (end of valid elements)
     int left = m - 1;
+    int right = 0;
     
-    // Pointer for nums2 (beginning
+    while (left >= 0 && right < n) {
+        if (nums1[left] > nums2[right]) {
+            int temp = nums1[left];
+            nums1[left] = nums2[right];
+            nums2[right] = temp;
+            left--;
+            right++;
+        } else break;
+    }
+    
+    Arrays.sort(nums1, 0, m);
+    Arrays.sort(nums2);
+    
+    for (int i = m; i < m + n; i++) {
+        nums1[i] = nums2[i - m];
+    }
+}
+```
+
+**Time Complexity:** O(min(N,M)) + O(N×logN) + O(M×logM) + O(N) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🔧 Optimal-2 — Gap Method (Shell Sort)</summary>
+
+```java
+// Function to merge two sorted arrays nums1 and nums2
+public void merge(int[] nums1, int m, int[] nums2, int n) {
+    int len = n + m;
+    int gap = (len / 2) + (len % 2);
+
+    while (gap > 0) {
+        int left = 0;
+        int right = left + gap;
+        while (right < len) {
+            if (left < m && right >= m) {
+                swapIfGreater(nums1, nums2, left, right - m);
+            }
+            else if (left >= m) {
+                swapIfGreater(nums2, nums2, left - m, right - m);
+            }
+            else {
+                swapIfGreater(nums1, nums1, left, right);
+            }
+            left++;
+            right++;
+        }
+        if (gap == 1) break;
+        gap = (gap / 2) + (gap % 2);
+    }
+
+    for (int i = m; i < m + n; i++) {
+        nums1[i] = nums2[i - m];
+    }
+}
+
+private void swapIfGreater(int[] arr1, int[] arr2, int idx1, int idx2) {
+    if (arr1[idx1] > arr2[idx2]) {
+        int temp = arr1[idx1];
+        arr1[idx1] = arr2[idx2];
+        arr2[idx2] = temp;
+    }
+}
+```
+
+**Time Complexity:** O((N+M)×log(N+M)) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🚀 Optimal-3 — Two Pointers from End (Best)</summary>
+
+```java
+// Function to merge two sorted arrays nums1 and nums2
+public void merge(int[] nums1, int m, int[] nums2, int n) {
+    int i = m - 1, j = n - 1;
+    int ind = m + n - 1;
+
+    while (j >= 0) {
+        if (i >= 0 && nums1[i] >= nums2[j]) {
+            nums1[ind] = nums1[i];
+            ind--;
+            i--;
+        } else {
+            nums1[ind] = nums2[j];
+            ind--;
+            j--;
+        }
+    }
+}
+```
+
+**Time Complexity:** O(N + M) | **Space Complexity:** O(1)
+</details>
+
+---
+
+### Q10. Find the Duplicate Number
+**Pattern:** Cycle/Duplicate Detection | **LeetCode:** 287
+
+<details>
+<summary>🔧 Better — Frequency Array</summary>
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int freq[] = new int[nums.length+1];
+
+        for(int i=0;i<nums.length;i++){
+            freq[nums[i]]++;
+
+            if(freq[nums[i]]>1) return nums[i];
+        }
+        
+        return -1;
+    }
+}
+```
+</details>
+
+<details>
+<summary>🚀 Optimal — Floyd's Cycle Detection O(n) O(1)</summary>
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0];
+        int fast = nums[0];
+
+        while(true){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+
+            if(slow == fast) break;
+        }
+
+        slow = nums[0];
+
+        while(slow!=fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+    }
+}
+```
+
+**Time Complexity:** O(n) | **Space Complexity:** O(1)
+</details>
+
+---
+
+### Q11. Find the Repeating and Missing Number
+**Pattern:** Cycle/Duplicate Detection | **GFG**
+
+<details>
+<summary>⚡ Brute Force — O(N²)</summary>
+
+```java
+// Function to find repeating and missing numbers
+public int[] findMissingRepeatingNumbers(int[] nums) {
+    int n = nums.length;
+    int repeating = -1, missing = -1;
+
+    for (int i = 1; i <= n; i++) {
+        int cnt = 0;
+        for (int j = 0; j < n; j++) {
+            if (nums[j] == i) cnt++;
+        }
+
+        if (cnt == 2) repeating = i;
+        else if (cnt == 0) missing = i;
+
+        if (repeating != -1 && missing != -1) break;
+    }
+
+    return new int[] {repeating, missing};
+}
+```
+
+**Time Complexity:** O(N²) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🔧 Better — Frequency Array</summary>
+
+```java
+class Solution {
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+        int freq[] = new int[nums.length+1];
+
+        for(int i=0;i<nums.length;i++){
+            freq[nums[i]]++;
+        }
+
+        int missedNum = -1, repeatedNum = -1;
+        for(int i=1;i<=nums.length;i++){
+            if(freq[i]==0) missedNum = i;
+            if(freq[i]>1) repeatedNum = i;
+            if (repeatedNum != -1 && missedNum != -1) {
+                break;
+            }
+        }
+
+        return new int[]{repeatedNum,missedNum};
+    }
+}
+```
+</details>
+
+<details>
+<summary>🚀 Optimal — Sign Marking O(n) O(1)</summary>
+
+```java
+class Solution {
+    public int[] findMissingRepeatingNumbers(int[] nums) {
+        int missing = -1;
+        int repeating = -1;
+
+        for (int i = 0; i < nums.length; i++) {
+            int idx = Math.abs(nums[i]) - 1;
+
+            if (nums[idx] > 0) {
+                nums[idx] = -nums[idx]; // mark as visited
+            } else {
+                repeating = idx + 1; // already visited => duplicate
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                missing = i + 1;
+                break;
+            }
+        }
+
+        return new int[]{repeating, missing};
+    }
+}
+```
+
+**Time Complexity:** O(n) | **Space Complexity:** O(1)
+</details>
+
+---
+
+### Q12. Count Inversions
+**Pattern:** Inversions/Pairs | **GFG**
+
+<details>
+<summary>⚡ Brute Force — O(n²)</summary>
+
+```java
+class Solution {
+    public long numberOfInversions(int[] nums) {
+        int ans = 0;
+
+        for(int i=0;i<nums.length;i++){
+            for(int j=i+1;j<nums.length;j++){
+                if(nums[i]>nums[j]){
+                    ans++;
+                }
+            }
+        }
+        
+        return ans;
+    }
+}
+```
+</details>
+
+<details>
+<summary>🚀 Optimal — Merge Sort O(n log n)</summary>
+
+```java
+class Solution {
+    public long numberOfInversions(int[] nums) {
+        return mergeSort(nums,0,nums.length-1);
+    }
+
+    private long mergeSort(int nums[], int low, int high){
+        long cnt = 0;
+
+        if(low < high){
+            int mid = low + (high-low)/2;
+
+            cnt += mergeSort(nums, low, mid);
+            cnt += mergeSort(nums, mid+1, high);
+            cnt += merge(nums, low, mid, high);
+        }
+        
+        return cnt;
+    }
+
+    private long merge(int nums[], int low, int mid, int high){
+        int[] temp = new int[high-low+1];
+
+        int left = low, right = mid+1, idx = 0;
+
+        long cnt = 0;
+        while(left <= mid && right <= high){
+            if(nums[left] <= nums[right]){
+                temp[idx++] = nums[left++];
+            }else{
+                temp[idx++] = nums[right++];
+                cnt += (mid - left + 1);
+            }
+        } 
+
+        while(left <= mid){
+            temp[idx++] = nums[left++];
+        }
+
+        while(right <= high){
+            temp[idx++] = nums[right++];
+        }
+
+        idx = 0;
+        for(int i=low; i<=high;i++){
+            nums[i] = temp[idx++];
+        }
+        return cnt;
+    }
+}
+```
+
+**Time Complexity:** O(n log n) | **Space Complexity:** O(n)
+
+**⚠️ Key:** `left` must start from `low`, NOT from `0`. Use `long` for count to avoid overflow.
+</details>
+
+---
+
+### Q13. Search in a 2D Matrix
+**Pattern:** Matrix Manipulation | **LeetCode:** 74
+
+<details>
+<summary>⚡ Brute Force — O(N×M)</summary>
+
+```java
+//Function to search for a given target in matrix
+public boolean searchMatrix(int[][] mat, int target) {
+    if (mat.length == 0 || mat[0].length == 0) {
+        return false;
+    }
+    
+    int n = mat.length;  
+    int m = mat[0].length; 
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (mat[i][j] == target) {
+                return true; 
+            }
+        }
+    }
+    return false; 
+}
+```
+
+**Time Complexity:** O(N×M) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🔧 Better — Row Binary Search O(N + logM)</summary>
+
+```java
+class Solution {
+    public boolean searchMatrix(int[][] mat, int target) {
+        for(int i=0; i<mat.length; i++){
+            if(mat[i][0]<=target && mat[i][mat[i].length-1]>=target){
+               return binarySearch(mat[i], target);
+            }
+        }
+        return false;
+    }
+
+    private boolean binarySearch(int arr[], int target){
+        int low = 0, high = arr.length-1;
+
+        while(low<=high){
+            int mid = low + (high - low)/2;
+
+            if(arr[mid] == target){
+                return true;
+            }else if(arr[mid]<target){
+                low = mid+1;
+            }else{
+                high = mid -1;
+            }
+        }
+        return false;
+    }
+}
+```
+
+**Time Complexity:** O(N + logM) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🚀 Optimal — Binary Search on Flattened Matrix O(log(N×M))</summary>
+
+```java
+// Function to search for a given target in matrix
+public boolean searchMatrix(int[][] mat, int target) {
+    int n = mat.length;
+    int m = mat[0].length;
+
+    int low = 0, high = n * m - 1;
+    
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        int row = mid / m;
+        int col = mid % m;
+        
+        if (mat[row][col] == target) return true;
+        else if (mat[row][col] < target) low = mid + 1;
+        else high = mid - 1;
+    }
+    
+    return false; 
+}
+```
+
+**Time Complexity:** O(log(N×M)) | **Space Complexity:** O(1)
+</details>
+
+---
+
+### Q14. Pow(x, n)
+**Pattern:** Math/Combinatorics | **LeetCode:** 50
+
+<details>
+<summary>⚡ Brute Force — O(n)</summary>
+
+```java
+public double myPow(double x, int n) {
+    if (n == 0 || x == 1.0) return 1; 
+    
+    long temp = n; // to avoid integer overflow
+    
+    if (n < 0) {
+        x = 1 / x;
+        temp = -1L * n;
+    }
+
+    double ans = 1;
+
+    for (long i = 0; i < temp; i++) {
+        ans *= x; 
+    }
+    return ans;
+}
+```
+
+**Time Complexity:** O(n) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🚀 Optimal — Binary Exponentiation O(log n)</summary>
+
+```java
+class Solution {
+    public double myPow(double x, int n) {
+        long num = n;
+
+        if(num < 0){
+            return (1.0 / pow(x, -num));
+        }
+
+        return pow(x, num);
+    }
+
+    private double pow(double x, long num){
+        if(num == 0){
+            return 1.0;
+        }
+
+        if(num % 2 == 0){
+            return pow(x*x, num/2);
+        }
+
+        return x*pow(x, num-1);
+    }
+}
+```
+
+**Time Complexity:** O(log N) | **Space Complexity:** O(log n) — recursive stack
+
+**⚠️ Key:** Use `long` for `n` to handle `Integer.MIN_VALUE` (whose negation overflows `int`).
+</details>
+
+---
+
+### Q15. Majority Element I
+**Pattern:** Majority/Voting | **LeetCode:** 169
+
+<details>
+<summary>⚡ Brute Force — O(N²)</summary>
+
+```java
+// Function to find the majority element in an array
+public int majorityElement(int[] nums) {
+    int n = nums.length;
+    
+    for (int i = 0; i < n; i++) {
+        int cnt = 0; 
+        for (int j = 0; j < n; j++) {
+            if (nums[j] == nums[i]) {
+                cnt++;
+            }
+        }
+        if (cnt > (n / 2)) {
+            return nums[i]; 
+        }
+    }
+    return -1; 
+}
+```
+
+**Time Complexity:** O(N²) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🔧 Better — HashMap O(N)</summary>
+
+```java
+// Function to find the majority element in an array
+public int majorityElement(int[] nums) {
+    int n = nums.length;
+    HashMap<Integer, Integer> map = new HashMap<>();
+    
+    for (int num : nums) {
+        map.put(num, map.getOrDefault(num, 0) + 1);
+    }
+    
+    for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        if (entry.getValue() > n / 2) {
+            return entry.getKey();
+        }
+    }
+    return -1;
+}
+```
+
+**Time Complexity:** O(N) | **Space Complexity:** O(N)
+</details>
+
+<details>
+<summary>🚀 Optimal — Boyer-Moore Voting O(N) O(1)</summary>
+
+```java
+// Function to find the majority element in an array
+public int majorityElement(int[] nums) {
+    int n = nums.length;
+    int cnt = 0;
+    int el = 0;
+    
+    // Applying the algorithm
+    for (int i = 0; i < n; i++) {
+        if (cnt == 0) {
+            cnt = 1;
+            el = nums[i];
+        } else if (el == nums[i]) {
+            cnt++;
+        } else {
+            cnt--;
+        }
+    }
+    
+    // Checking if the stored element is the majority element
+    int cnt1 = 0;
+    for (int i = 0; i < n; i++) {
+        if (nums[i] == el) {
+            cnt1++;
+        }
+    }
+    
+    if (cnt1 > (n / 2)) {
+        return el;
+    }
+    
+    return -1;
+}
+```
+
+**Time Complexity:** O(N) + O(N) | **Space Complexity:** O(1)
+</details>
+
+---
+
+### Q16. Majority Element II
+**Pattern:** Majority/Voting | **LeetCode:** 229
+
+<details>
+<summary>⚡ Brute Force — O(N²)</summary>
+
+```java
+// Function to find majority elements in an array
+public List<Integer> majorityElementTwo(int[] nums) {
+    int n = nums.length;
+    List<Integer> result = new ArrayList<>();
+    
+    for (int i = 0; i < n; i++) {
+        if (result.size() == 0 || result.get(0) != nums[i]) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
+                if (nums[j] == nums[i]) {
+                    cnt++;
+                }
+            }
+            if (cnt > (n / 3)) {
+                result.add(nums[i]);
+            }
+        }
+        if (result.size() == 2) {
+            break;
+        }
+    }
+    return result;
+}
+```
+
+**Time Complexity:** O(N²) | **Space Complexity:** O(1)
+</details>
+
+<details>
+<summary>🔧 Better — HashMap O(N)</summary>
+
+```java
+// Function to find majority elements in an array
+public List<Integer> majorityElementTwo(int[] nums) {
+    int n = nums.length;
+    List<Integer> result = new ArrayList<>();
+    Map<Integer, Integer> mpp = new HashMap<>();
+    int mini = n / 3 + 1;
+
+    for (int i = 0; i < n; i++) {
+        mpp.put(nums[i], mpp.getOrDefault(nums[i], 0) + 1);
+
+        if (mpp.get(nums[i]) == mini) {
+            result.add(nums[i]);
+        }
+
+        if (result.size() == 2) {
+            break;
+        }
+    }
+
+    return result;
+}
+```
+
+**Time Complexity:** O(N) | **Space Complexity:** O(N)
+</details>
+
+<details>
+<summary>🚀 Optimal — Extended Boyer-Moore O(N) O(1)</summary>
+
+```java
+// Function to find majority elements in an array
+public List<Integer> majorityElementTwo(int[] nums) {
+    int n = nums.length;
+    int cnt1 = 0, cnt2 = 0;
+    int el1 = Integer.MIN_VALUE, el2 = Integer.MIN_VALUE;
+
+    // Find the potential candidates using Boyer Moore's Voting Algorithm
+    for (int i = 0; i < n; i++) {
+        if (cnt1 == 0 && el2 != nums[i]) {
+            cnt1 = 1;
+            el1 = nums[i]; 
+        } else if (cnt2 == 0 && el1 != nums[i]) {
+            cnt2 = 1;
+            el2 = nums[i]; 
+        } else if (nums[i] == el1) {
+            cnt1++;
+        } else if (nums[i] == el2) {
+            cnt2++; 
+        } else {
+            cnt1--; 
+            cnt2--;
+        }
+    }
+
+    // Validate the candidates by counting occurrences
+    cnt1 = 0; cnt2 = 0; 
+    
+    for (int i = 0; i < n; i++) {
+        if (nums[i] == el1) {
+            cnt1++; 
+        }
+        if (nums[i] == el2) {
+            cnt2++;
+        }
+    }
+
+    int mini = n / 3 + 1;
+    List<Integer> result = new ArrayList<>(); 
+
+    if (cnt1 >= mini) {
+        result.add(el1);
+    }
+    if (cnt2 >= mini && el1 != el2) {
+        result.add(el2); 
+    }
+
+    return result;
+}
+```
+
+**Time Complexity:** O(N) + O(N) | **Space Complexity:** O(1)
+
+**⚠️ Key:** Guard conditions `el2 != nums[i]` and `el1 != nums[i]` prevent both candidates from becoming the same element.
+</details>
+
+---
+
+### Q17. Grid Unique Paths
+**Pattern:** Math/Combinatorics | **LeetCode:** 62
+
+> 📝 *Solution to be added*
+
+---
+
+### Q18. Reverse Pairs
+**Pattern:** Inversions/Pairs | **LeetCode:** 493
+
+> 📝 *Solution to be added*
+
+---
+
+### Q19. Two Sum
+**Pattern:** Hashing/Two Pointer | **LeetCode:** 1
+
+> 📝 *Solution to be added*
+
+---
+
+### Q20. 4 Sum
+**Pattern:** Hashing/Two Pointer | **LeetCode:** 18
+
+> 📝 *Solution to be added*
+
+---
+
+### Q21. Longest Consecutive Sequence in an Array
+**Pattern:** Hashing/Two Pointer | **LeetCode:** 128
+
+> 📝 *Solution to be added*
+
+---
+
+### Q22. Largest Subarray with K Sum
+**Pattern:** Subarray | **LeetCode:** 560
+
+> 📝 *Solution to be added*
+
+---
+
+### Q23. Count Subarrays with Given XOR K
+**Pattern:** Subarray | **LeetCode:** —
+
+> 📝 *Solution to be added*
+
+---
+
+### Q24. Longest Substring Without Repeating Characters
+**Pattern:** Subarray/Sliding Window | **LeetCode:** 3
+
+> 📝 *Solution to be added*
