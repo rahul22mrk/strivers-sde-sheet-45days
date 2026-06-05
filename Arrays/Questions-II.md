@@ -1,5 +1,63 @@
 
 
+14. Pow(x, n)
+
+public double myPow(double x, int n) {
+        // Base case: any number to the power of 0 is 1
+        if (n == 0 || x == 1.0) return 1; 
+        
+        long temp = n; // to avoid integer overflow
+        
+        // Handle negative exponents
+        if (n < 0) {
+            x = 1 / x;
+            temp = -1L * n;
+        }
+
+        double ans = 1;
+
+        for (long i = 0; i < temp; i++) {
+            // Multiply ans by x for n times
+            ans *= x; 
+        }
+        return ans;
+    }
+
+    Complexity Analysis
+Time Complexity: O(n), where n is the exponent. The loop runs n times to compute the power.
+
+Space Complexity: O(1), as the algorithm uses a constant amount of extra space regardless of the input size.
+
+
+
+class Solution {
+    public double myPow(double x, int n) {
+        long num = n;
+
+        if(num < 0){
+            return (1.0 / pow(x, -num));
+        }
+
+        return pow(x, num);
+    }
+
+    private double pow(double x, long num){
+        if(num == 0){
+            return 1.0;
+        }
+
+        if(num % 2 == 0){
+            return pow(x*x, num/2);
+        }
+
+        return x*pow(x, num-1);
+    }
+}
+Complexity Analysis
+Time Complexity : The time complexity is O(log N) due to the halving of n in the even case and linear reduction in the odd case.
+
+Space Complexity :The space complexity is O(log n) because of the recursive call stack depth.
+
 
 15. Majority Element-I
 
