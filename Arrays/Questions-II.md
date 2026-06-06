@@ -348,8 +348,296 @@ Space Complexity: O(1) for only using a list that stores a maximum of 2 elements
 
 
 17. Grid unique paths
+Recursion:
+ //Function to solve the problem using recursion
+    private int func(int i, int j) {
+        // Base case
+        if (i == 0 && j == 0) return 1;
+
+        // If we go out of bounds, there are no ways
+        if (i < 0 || j < 0) return 0;
+
+        /* Calculate the number of ways by
+        moving up and left recursively*/
+        int up = func(i - 1, j);
+        int left = func(i, j - 1);
+
+        // Return the total ways
+        return up + left;
+    }
+    /*Function to count the total ways
+    to reach (0,0) from (m-1,n-1)*/
+    public int uniquePaths(int m, int n) {
+        // Return the total count (0-based indexing)
+        return func(m - 1, n - 1);
+    }Time Complexity: O(2(M+N)*(M+N)), where M is the number of row and N is the number of column in 2D array. As, each cell has 2 choices and path length is near about (M+N) and each path would take (M+N) to travel as well.
+
+Space Complexity:O((M-1)+(N-1)), In the worst case, the depth of the recursion can reach (M-1)+(N-1), corresponding to the maximum number of steps required to reduce both i and j to 0.
+
+
+Memoization :
+//Function to solve the problem using recursion
+    private int func(int i, int j, int[][] dp) {
+        // Base case
+        if (i == 0 && j == 0) return 1;
+
+        // If we go out of bounds, there are no ways
+        if (i < 0 || j < 0) return 0;
+        
+        /* If the value for this cell 
+        is already computed, return it.*/
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        /* Calculate the number of ways by
+        moving up and left recursively*/
+        int up = func(i - 1, j, dp);
+        int left = func(i, j - 1, dp);
+
+        /* Store the result in dp array
+        and return the total ways*/
+        return dp[i][j] = up + left;
+    }
+    /*Function to count the total ways
+    to reach (0,0) from (m-1,n-1)*/
+    public int uniquePaths(int m, int n) {
+        // Declare a 2D DP array to store results
+        int dp[][] = new int[m][n];
+        
+        /* Initialize the DP array with 
+        -1 to indicate uncomputed values*/
+        for (int[] row : dp)
+            Arrays.fill(row, -1);
+            
+        // Return the total count (0-based indexing)
+        return func(m - 1, n - 1, dp);
+    }
+    Complexity Analysis: 
+Time Complexity: O(M*N), where M is the number of row and N is the number of column in 2D array. At max, there will be M*N calls of recursion as the subproblems can go upto M*N.
+
+Space Complexity:O((N-1)+(M-1)) + O(M*N), We are using a recursion stack space: O((N-1)+(M-1)), here (N-1)+(M-1) is the path length and an external DP Array of size ‘M*N’.
+
+
+Tabulation :
+
+memoization -> Tabulation
+1. declare base case
+2. express all states in for loop
+3. copy the recurrence & write
+
+// Function to solve the problem using tabulation
+    int func(int m, int n, int[][] dp) {
+        // Loop through the grid using two nested loops
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Base condition
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                    /* Skip the rest of the loop and 
+                    continue with the next iteration.*/
+                    continue; 
+                }
+
+                /* Initialize variables to store the number
+                of ways from cell above (up) and left (left)*/
+                int up = 0;
+                int left = 0;
+
+                /* If we are not at first row (i > 0), update
+                'up' with the value from the cell above*/
+                if (i > 0)
+                    up = dp[i - 1][j];
+
+                /* If we are not at the first column (j > 0),
+                update 'left' with value from the cell to left*/
+                if (j > 0)
+                    left = dp[i][j - 1];
+
+                /* Calculate the number of ways to reach the 
+                current cell by adding 'up' and 'left'*/
+                dp[i][j] = up + left;
+            }
+        }
+
+        // The result is stored in bottom-right cell (m-1, n-1)
+        return dp[m - 1][n - 1];
+    }
+
+    /* Function to count the total ways 
+    to reach (0,0) from (m-1,n-1)*/
+    public int uniquePaths(int m, int n) {
+        /* Initialize a memoization table (dp)
+        to store the results of subproblems*/
+        int[][] dp = new int[m][n];
+
+        // Return the total count (0-based indexing)
+        return func(m, n, dp);
+    }
+
+Complexity Analysis: 
+Time Complexity: O(M*N), where M is the number of row and N is the number of column in 2D array. As the whole matrix is traversed once using two nested loops.
+
+Space Complexity:O(M*N), As an external DP Array of size ‘M*N’ is used to store the intermediate calculations.
+
+
+Space Optimization :
+-> if there is a prevuious row & previous column, we can space optimize it
+ // Function to solve the problem using space optimization
+    int func(int m, int n) {
+        /* Create an array to represent 
+        the previous row of the grid*/
+        int[] prev = new int[n];
+
+        // Iterate through the rows of the grid
+        for (int i = 0; i < m; i++) {
+            /* Initialize a temporary array to
+            represent the current row*/
+            int[] temp = new int[n];
+
+            for (int j = 0; j < n; j++) {
+                // Base case
+                if (i == 0 && j == 0) {
+                    temp[j] = 1;
+                    continue;
+                }
+
+                /* Initialize variables to store the number
+                of ways from cell above (up) and left (left)*/
+                int up = (i > 0) ? prev[j] : 0;
+                int left = (j > 0) ? temp[j - 1] : 0;
+
+                /* Calculate the number of ways to reach
+                the current cell by adding 'up' and 'left'*/
+                temp[j] = up + left;
+            }
+
+            /* Update the previous array with values
+            calculated for the current row*/
+            prev = temp;
+        }
+
+        /* The result is stored in the last
+        cell of the previous row (n-1)*/
+        return prev[n - 1];
+    }
+
+    /* Function to count the total ways
+    to reach (0,0) from (m-1,n-1)*/
+    public int uniquePaths(int m, int n) {
+        // Return the total count (0-based indexing)
+        return func(m, n);
+    }
+
+    Complexity Analysis: 
+Time Complexity: O(M*N), where M is the number of row and N is the number of column in 2D array. As the whole matrix is traversed once using two nested loops.
+
+Space Complexity:O(N), We are using an external array of size ‘N’ to store only one row.
+
 
 18. Reverse Pairs
+Brute Force:
+
+ /* Function to count reverse
+    pairs where a[i] > 2 * a[j]*/
+    public int reversePairs(int[] nums) {
+        
+        // Call countPairs with the array and its length
+        return countPairs(nums, nums.length); 
+        
+    }
+
+    /* Helper function to count pairs
+    satisfying the condition a[i] > 2 * a[j]*/
+    private int countPairs(int[] nums, int n) {
+        
+        // Initialize count of reverse pairs
+        int cnt = 0;
+        
+        /* Nested loops to check each
+        pair (i, j) where i < j*/
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                
+                /* Check if the condition 
+                a[i] > 2 * a[j] holds*/
+                if ((long)nums[i] > (long)2 * nums[j]) {
+                    
+                    /* Increment count if
+                    condition is satisfied*/
+                    cnt++; 
+                    
+                }
+            }
+        }
+        // Return the total count of reverse pairs
+        return cnt; 
+    }
+    Complexity Analysis 
+Time Complexity: O(N2), where N is size of the given array. For using nested loops here and those two loops roughly run for N times.
+
+Space Complexity: O(1), no extra space is used to solve this problem.
+
+class Solution {
+    public int reversePairs(int[] nums) {
+        return mergeSort(nums, 0, nums.length - 1);
+    }
+
+    // Merge sort function
+    private int mergeSort(int[] nums, int low, int high) {
+        if (low >= high) return 0;
+
+        int mid = (low + high) / 2;
+        int cnt = 0;
+
+        cnt += mergeSort(nums, low, mid);
+        cnt += mergeSort(nums, mid + 1, high);
+        cnt += countPairs(nums, low, mid, high);
+        merge(nums, low, mid, high);
+
+        return cnt;
+    }
+
+    // Count reverse pairs
+    private int countPairs(int[] nums, int low, int mid, int high) {
+        int right = mid + 1, cnt = 0;
+
+        for (int i = low; i <= mid; i++) {
+            while (right <= high && (long) nums[i] > 2L * nums[right]) {
+                right++;
+            }
+            cnt += (right - (mid + 1));
+        }
+
+        return cnt;
+    }
+
+    // Merge two sorted halves
+    private void merge(int[] nums, int low, int mid, int high) {
+        List<Integer> temp = new ArrayList<>();
+        int left = low, right = mid + 1;
+
+        while (left <= mid && right <= high) {
+            if (nums[left] <= nums[right]) {
+                temp.add(nums[left++]);
+            } else {
+                temp.add(nums[right++]);
+            }
+        }
+
+        while (left <= mid) temp.add(nums[left++]);
+        while (right <= high) temp.add(nums[right++]);
+
+        for (int i = low; i <= high; i++) {
+            nums[i] = temp.get(i - low);
+        }
+    }
+}
+Time Complexity: O(2N * logN), where N is size of the given array.
+Inside the mergeSort() we call merge() and countPairs() except mergeSort() itself. Now, inside the function countPairs(), though we are running a nested loop, we are actually iterating the left half once and the right half once in total.
+That is why, the time complexity is O(N). And the merge() function also takes O(N). The mergeSort() takes O(logN) time complexity. Therefore, the overall time complexity will be O(logN x (N+N)) = O(2NxlogN)
+
+Space Complexity: O(N), as in the merge sort, a temporary array to store elements in sorted order is used.
+
 
 19. Two Sum
 
