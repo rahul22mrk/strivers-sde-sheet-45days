@@ -640,10 +640,409 @@ Space Complexity: O(N), as in the merge sort, a temporary array to store element
 
 
 19. Two Sum
+Brute:
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+
+        for(int i=0;i<nums.length; i++){
+            for(int j=i+1;j<nums.length;j++){
+                if(nums[i]+nums[j] == target){
+                    return new int[]{i,j};
+                }
+            }
+        }
+         return new int[]{-1,-1};
+    }
+}
+Complexity Analysis 
+Time Complexity:O(N 2), For using two nested loops to traverse the array, where N is the length of that array.
+
+Space Complexity: O(1), not using extra space.
+
+Better:
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        HashMap<Integer,Integer> hm = new HashMap<>();
+
+        for(int i=0;i<nums.length; i++){
+            int required = target - nums[i];
+
+            if(hm.containsKey(required)){
+                return new int[]{hm.get(required), i};
+            }
+
+            hm.put(nums[i], i);
+            
+        }
+         return new int[]{-1,-1};
+    }
+}
+Complexity Analysis 
+Time Complexity:O(N), where N is the size of the array. The loop runs N times in the worst case and searching in a hashmap takes O(1) generally. So the time complexity is O(N).
+
+Note:In the worst case(which rarely happens), the unordered_map takes O(N) to find an element. In that case, the time complexity will be O(N2). If we use map instead of unordered_map, the time complexity will be O(N* logN) as the map data structure takes logN time to find an element.
+
+Optimal:
+ /* Function to find two indices in the array `nums`
+       such that their elements sum up to `target`.
+    */
+    public int[] twoSum(int[] nums, int target) {
+        // Size of the nums array
+        int n = nums.length;
+        
+        // Array to store indices of two numbers
+        int[] ans = new int[2];
+        
+        // 2D array to store {element, index} pairs
+        int[][] eleIndex = new int[n][2];
+        for (int i = 0; i < nums.length; i++) {
+            eleIndex[i][0] = nums[i];
+            eleIndex[i][1] = i;
+        }
+        
+        /* Sort eleIndex by the first
+        element in ascending order*/
+        Arrays.sort(eleIndex, new Comparator<int[]>() {
+            public int compare(int[] a, int[] b) {
+                return Integer.compare(a[0], b[0]);
+            }
+        });
+        //Arrays.sort(eleIndex,(a,b)->Integer.compare(a[0],b[0]));
+
+        /* Two pointers: one starting 
+        from left and one from right*/
+        int left = 0, right = n - 1;
+
+        while (left < right) {
+            /* Calculate sum of elements at
+            left and right pointers*/
+            int sum = eleIndex[left][0] + eleIndex[right][0];
+
+            if (sum == target) {
+                
+                /* If sum equals target, 
+                store indices and return*/
+                ans[0] = eleIndex[left][1];
+                ans[1] = eleIndex[right][1];
+                return ans;
+                
+            } else if (sum < target) {
+                
+                /* If sum is less than target,
+                move left pointer to the right*/
+                left++;
+                
+            } else {
+                
+                /* If sum is greater than target,
+                move right pointer to the left*/
+                right--;
+                
+            }
+        }
+
+        // If no such pair found, return {-1, -1}
+        return new int[]{-1, -1};
+    }
+    Complexity Analysis 
+Time Complexity: O(N) + O(N*logN), where N is size of the array. As the loop will run at most N times & sorting the array will take N * logN time complexity.
+
+Space Complexity: O(N), because of the external data structure created to store the array elements along with their indices
 
 20. 4 Sum
+Brute:
+//function to find quadruplets having sum equal to target
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        //size of the array
+        int n = nums.length;
+        
+        // Set to store unique quadruplets
+        Set<List<Integer>> set = new HashSet<>();
+        
+        // Checking all possible quadruplets
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                for (int k = j + 1; k < n; k++) {
+                    for (int l = k + 1; l < n; l++) {
+                        // Calculate the sum of the current quadruplet
+                        long sum = nums[i] + nums[j] + nums[k] + nums[l];
+                        
+                        // Check if the sum matches the target
+                        if (sum == target) {
+                            List<Integer> temp = Arrays.asList(nums[i], nums[j], nums[k], nums[l]);
+                            // Sort the quadruplet to ensure uniqueness
+                            Collections.sort(temp);
+                            set.add(temp);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Convert set to list (unique quadruplets)
+        return new ArrayList<>(set);
+    }
+Complexity Analysis 
+Time Complexity: O(N4) for using 4 nested loops, where N is size of the array.
 
+Space Complexity: O(2 x no. of the quadruplets), for using a set data structure and a list to store the quads.
+
+    Better:
+public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = nums.length;
+        
+        // Set to store unique quadruplets
+        Set<List<Integer>> set = new HashSet<>();
+        
+        // Checking all possible quadruplets
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                // Set to store elements seen so far in the loop
+                Set<Long> hashset = new HashSet<>();
+                
+                for (int k = j + 1; k < n; k++) {
+                    /* Calculate the fourth element
+                    needed to reach target*/
+                    long sum = (long) nums[i] + nums[j] + nums[k];
+                    long fourth = target - sum;
+                    
+                    /* Find if fourth element exists in 
+                    hashset (complements seen so far)*/
+                    if (hashset.contains(fourth)) {
+                        // Found a quadruplet that sums up to target
+                        List<Integer> temp = Arrays.asList(nums[i], nums[j], nums[k], (int) fourth);
+                        Collections.sort(temp);
+                        set.add(temp);
+                    }
+                    
+                    // Insert the kth element into hashset for future checks
+                    hashset.add((long) nums[k]);
+                }
+            }
+        }
+        
+        // Convert set to list (unique quadruplets)
+        ans.addAll(set);
+        return ans;
+    }
+    Complexity Analysis 
+Time Complexity: O(N3xlog(M)), for using 3 nested loops and inside the loops there are some operations on the set data structure which take log(M) time complexity, where N is size of the array, M is number of elements in the set.
+
+Space Complexity: O(2 x no. of the quadruplets)+O(N) for using a set data structure and a list to store the quads. This results in the first term. And the second space is taken by the set data structure we are using to store the array elements. At most, the set can contain approximately all the array elements and so the space complexity is O(N).
+
+Optimal:
+ public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int n = nums.length;
+        
+        // Sort the input array nums
+        Arrays.sort(nums);
+        
+        // Iterate through the array to find quadruplets
+        for (int i = 0; i < n; i++) {
+            // Skip duplicates for i
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+            
+            for (int j = i + 1; j < n; j++) {
+                // Skip duplicates for j
+                if (j > i + 1 && nums[j] == nums[j - 1])
+                    continue;
+                
+                // Two pointers approach
+                int k = j + 1;
+                int l = n - 1;
+                
+                while (k < l) {
+                    long sum = (long) nums[i] + nums[j] + nums[k] + nums[l];
+                    
+                    if (sum == target) {
+                        // Found a quadruplet that sums up to target
+                        List<Integer> temp = Arrays.asList(nums[i], nums[j], nums[k], nums[l]);
+                        ans.add(temp);
+                        
+                        // Skip duplicates for k and l
+                        k++;
+                        l--;
+                        while (k < l && nums[k] == nums[k - 1]) k++;
+                        while (k < l && nums[l] == nums[l + 1]) l--;
+                    } else if (sum < target) {
+                        k++;
+                    } else {
+                        l--;
+                    }
+                }
+            }
+        }
+        
+        return ans;
+    }
+
+   Complexity Analysis 
+Time Complexity: O(N3), where N is the size of the given array.
+Sorting the array takes O(NlogN) time, and the 3 nested loops take O(N3) time. Thus, the overall time complexity is O(N3) + O(NlogN), which boils down to O(N3).
+
+Space Complexity: O(no. of quadruplets), this space is only used to store the answer. No extra space is used to solve this problem. So, from that perspective, space complexity can be written as O(1). 
+
+    
 21. Longest Consecutive Sequence in an Array
+
+Brute:
+ // Helper function to perform linear search
+    private boolean linearSearch(int[] a, int num) {
+        int n = a.length;
+        // Traverse through the array
+        for (int i = 0; i < n; i++) {
+            if (a[i] == num)
+                return true;
+        }
+        return false;
+    }
+
+    public int longestConsecutive(int[] nums) {
+        // If the array is empty
+        if (nums.length == 0) {
+            return 0;
+        }
+        int n = nums.length;
+        // Initialize the longest sequence length
+        int longest = 1;
+
+        // Iterate through each element in the array
+        for (int i = 0; i < n; i++) {
+            // Current element
+            int x = nums[i];
+            // Count of the current sequence
+            int cnt = 1;
+
+            // Search for consecutive numbers
+            while (linearSearch(nums, x + 1) == true) {
+                // Move to the next number in the sequence
+                x += 1;
+                // Increment the count of the sequence
+                cnt += 1;
+            }
+
+            // Update the longest sequence length found so far
+            longest = Math.max(longest, cnt);
+        }
+        return longest;
+    }
+Complexity Analysis:
+Time Complexity: O(N3), where N is the size of the array.
+In the worst case, all N elements form a single consecutive sequence. Each element in nums is checked in the outer loop O(N) times. The inner while loop could also run O(N) times for one outer iteration. Since linearSearch() is called inside the conditional statement of the while loop and itself runs in O(N), this results in a cubic time complexity.
+
+Space Complexity: O(1), as we are not using any extra space to solve this problem.
+
+Better:
+ public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+
+        // Return 0 if array is empty
+        if (n == 0) return 0; 
+
+        Arrays.sort(nums); // Sort the array
+
+        // Track last smaller element
+        int lastSmaller = Integer.MIN_VALUE; 
+        // Count current sequence length
+        int cnt = 0; 
+        // Track longest sequence length
+        int longest = 1; 
+
+        for (int i = 0; i < n; i++) {
+            // If consecutive number exists
+            if (nums[i] - 1 == lastSmaller) {
+                // Increment sequence count
+                cnt += 1; 
+                // Update last smaller element
+                lastSmaller = nums[i]; 
+            } 
+            // If consecutive number doesn't exist
+            else if (nums[i] != lastSmaller) {
+                // Reset count for new sequence
+                cnt = 1; 
+                // Update last smaller element
+                lastSmaller = nums[i]; 
+            }
+            // Update longest if needed
+            longest = Math.max(longest, cnt); 
+        }
+        return longest;
+    }
+
+    class Solution {
+    public int longestConsecutive(int[] nums) {
+        Arrays.sort(nums);
+
+        int maxCnt = 1, cnt =1;
+        for(int i=1;i<nums.length;i++){
+            if(nums[i] == nums[i-1]){
+                continue;
+            }
+
+            if(nums[i-1]+1 == nums[i]){
+                cnt++;
+            }else{
+                maxCnt = Math.max(maxCnt, cnt);
+                cnt = 1;
+            }
+        }
+        return  Math.max(maxCnt, cnt);
+    }
+}
+Complexity Analysis 
+Time Complexity: O(NlogN) + O(N), here N is the size of the given array. Here, O(NlogN) is for sorting the array. To find the longest sequence, we use a loop that results in O(N).
+
+Space Complexity: O(1), as we are not using any extra space to solve this problem.
+    
+
+Optimal:
+ public int longestConsecutive(int[] nums) {
+        int n = nums.length;
+        // If the array is empty
+        if (n == 0) return 0;
+
+        // Initialize the longest sequence length
+        int longest = 1; 
+        Set<Integer> st = new HashSet<>();
+
+        // Put all the array elements into the set
+        for (int i = 0; i < n; i++) {
+            st.add(nums[i]);
+        }
+
+        /* Traverse the set to 
+           find the longest sequence */
+        for (int it : st) {
+            // Check if 'it' is a starting number of a sequence
+            if (!st.contains(it - 1)) {
+                // Initialize the count of the current sequence
+                int cnt = 1; 
+                // Starting element of the sequence
+                int x = it; 
+
+                // Find consecutive numbers in the set
+                while (st.contains(x + 1)) {
+                    // Move to the next element in the sequence
+                    x = x + 1; 
+                    // Increment the count of the sequence
+                    cnt = cnt + 1; 
+                }
+                // Update the longest sequence length
+                longest = Math.max(longest, cnt);
+            }
+        }
+        return longest;
+    }
+  Complexity Analysis 
+Time Complexity: O(N) + O(2xN) ~ O(3xN), where N is the size of the array. The function takes O(N) to insert all elements into the set data structure. After that, for every starting element, we find the consecutive elements. Although nested loops are used, the set will be traversed at most twice in the worst case. Therefore, the time complexity is O(2xN) instead of O(N2).
+
+Space Complexity: O(N), as we use a set data structure to solve this problem.
+Note: The time complexity assumes that we use an unordered_set, which has O(1) time complexity for set operations.
+
+In the worst case, if the set operations take O(N), the total time complexity would be approximately O(N2). If we use a set instead of an unordered_set, the set operations will have a time complexity of O(logN), resulting in a total time complexity of O(NlogN).  
 
 22. Largest Subarray with K sum
 
