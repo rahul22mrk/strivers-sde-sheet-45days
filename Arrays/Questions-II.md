@@ -1045,7 +1045,285 @@ Note: The time complexity assumes that we use an unordered_set, which has O(1) t
 In the worst case, if the set operations take O(N), the total time complexity would be approximately O(N2). If we use a set instead of an unordered_set, the set operations will have a time complexity of O(logN), resulting in a total time complexity of O(NlogN).  
 
 22. Largest Subarray with K sum
+Brute:
+ public int longestSubarray(int[] nums, int k) {
+        int n = nums.length; 
+        int maxLength = 0;
 
+        // starting index
+        for (int startIndex = 0; startIndex < n; startIndex++) { 
+            // ending index
+            for (int endIndex = startIndex; endIndex < n; endIndex++) { 
+                /* add all the elements of 
+                   subarray = nums[startIndex...endIndex]  */
+                int currentSum = 0;
+                for (int i = startIndex; i <= endIndex; i++) {
+                    currentSum += nums[i];
+                }
+
+                if (currentSum == k) {
+                    maxLength = Math.max(maxLength, endIndex - startIndex + 1);
+                }
+            }
+        }
+        return maxLength;
+    }
+Complexity Analysis 
+Time Complexity: O(N3), where N is the size of the array. Since we are using three nested loops, each running approximately N times.
+
+Space Complexity: O(1), as we are not using any extra space.
+
+Optimal-positive+negatives
+ public int longestSubarray(int[] nums, int k) {
+        int n = nums.length;
+
+        Map<Integer, Integer> preSumMap = new HashMap<>();
+        int sum = 0;
+        int maxLen = 0;
+        for (int i = 0; i < n; i++) {
+            // calculate the prefix sum till index i
+            sum += nums[i];
+
+            // if the sum equals k, update maxLen
+            if (sum == k) {
+                maxLen = Math.max(maxLen, i + 1);
+            }
+
+            // calculate the sum of remaining part i.e., sum - k
+            int rem = sum - k;
+
+            // calculate the length and update maxLen
+            if (preSumMap.containsKey(rem)) {
+                int len = i - preSumMap.get(rem);
+                maxLen = Math.max(maxLen, len);
+            }
+
+            // update the map if sum is not already present
+            if (!preSumMap.containsKey(sum)) {
+                preSumMap.put(sum, i);
+            }
+        }
+
+        return maxLen;
+    }
+Complexity Analysis 
+Time Complexity: O(N) or O(NxlogN) depending on the map data structure used, where N is the size of the array. For example, using an unordered_map in C++ gives a time complexity of O(N) (though in the worst case, unordered_map takes O(N) to find an element, making the time complexity O(N2)). If we use a map data structure, the time complexity is O(NxlogN). The best case complexity is O(N) as we are traversing the array with a loop.
+
+Space Complexity: O(N), since we are using a map data structure.
+
+Optimal : Positive Only
+public int longestSubarray(int[] nums, int k) {
+        int n = nums.length;
+
+        // To store the maximum length of the subarray
+        int maxLen = 0;
+
+        // Pointers to mark the start and end of window
+        int left = 0, right = 0;
+
+        // To store the sum of elements in the window
+        int sum = nums[0];
+
+        // Traverse all the elements
+        while (right < n) {
+
+            // If the sum exceeds K, shrink the window
+            while (left <= right && sum > k) {
+                sum -= nums[left];
+                left++;
+            }
+
+            // Store the maximum length
+            if (sum == k) {
+                maxLen = Math.max(maxLen, right - left + 1);
+            }
+
+            right++;
+            if (right < n) sum += nums[right];
+        }
+
+        return maxLen;
+    }
+}
+Complexity Analysis:
+Time Complexity: O(N), where N is the size of the array.
+There are two pointers left and right which traverse the array at once taking linear time.
+
+Space Complexity: O(1), as only a couple of variables are used.
+    
 23. Count subarrays with given xor K
+Brute:
+// Function to count the number of subarrays with XOR k
+    public int subarraysWithXorK(int[] nums, int k) {
+        int n = nums.length; 
+        int cnt = 0;
+
+        // Step 1: Generate subarrays
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int xorr = 0;
+                /* Step 2: Calculate XOR of 
+                   all elements in the subarray */
+                for (int K = i; K <= j; K++) {
+                    xorr = xorr ^ nums[K];
+                }
+                // Step 3: Check XOR and count
+                if (xorr == k) cnt++;
+            }
+        }
+        return cnt;
+    }
+    Complexity Analysis 
+Time Complexity: O(N3), where N is the size of the array. This is because we are using three nested loops, each running approximately N times.
+
+Space Complexity: O(1) since we are not using any additional space.
+
+Better:
+ // Function to count the number of subarrays with XOR k
+    public int subarraysWithXorK(int[] nums, int k) {
+        int n = nums.length; 
+        int cnt = 0;
+
+        // Step 1: Generate subarrays
+        for (int i = 0; i < n; i++) {
+            int xorr = 0;
+            for (int j = i; j < n; j++) {
+                /* Step 2: Calculate XOR of
+                   all elements in the subarray */
+                xorr = xorr ^ nums[j];
+
+                // Step 3: Check XOR and count
+                if (xorr == k) cnt++;
+            }
+        }
+        return cnt;
+    }
+    Complexity Analysis  
+Time Complexity: O(N2), where N is the size of the array. Since we are using two nested loops, each running for N times, the time complexity will be approximately O(N2).
+
+Space Complexity: O(1) as we are not using any additional space.
+
+Optimal:
+ public int subarraysWithXorK(int[] nums, int k) {
+        int n = nums.length;
+        int xr = 0;
+        Map<Integer, Integer> mpp = new HashMap<>();
+        // setting the value of 0.
+        mpp.put(xr, mpp.getOrDefault(xr, 0) + 1);
+        int cnt = 0;
+
+        for (int i = 0; i < n; i++) {
+            // prefix XOR till index i:
+            xr = xr ^ nums[i];
+
+            // By formula: x = xr ^ k:
+            int x = xr ^ k;
+
+            // add the occurrence of xr ^ k to the count:
+            cnt += mpp.getOrDefault(x, 0);
+
+            // Insert the prefix xor till index i into the map:
+            mpp.put(xr, mpp.getOrDefault(xr, 0) + 1);
+        }
+        return cnt;
+    }
+Complexity Analysis 
+Time Complexity: O(N) or O(NxlogN), where N is the size of the array. If we use an unordered_map in C++, the time complexity is O(N). However, with a map data structure, the time complexity is O(NxlogN). In the worst case for an unordered_map, the searching time can increase to O(N), making the overall time complexity O(N2).
+
+Space Complexity: O(N), as we are using a map data structure.
 
 24. Longest Substring Without Repeating Characters
+Brute:
+ public int longestNonRepeatingSubstring(String s) {
+        // Length of the input string
+        int n = s.length();
+        
+        // Variable to store max length
+        int maxLen = 0;
+        
+        /* Iterate through all possible 
+           starting points of the substring */
+        for (int i = 0; i < n; i++) {
+            
+            /* Hash to track characters in 
+               the current substring window */
+            // Assuming extended ASCII characters
+            int[] hash = new int[256];
+            Arrays.fill(hash, 0);
+            
+            for (int j = i; j < n; j++) {
+                
+                /* If s.charAt(j) is already in the
+                   current substring window */
+                if (hash[s.charAt(j)] == 1) break;
+                
+                /* Update the hash to mark s.charAt(j)
+                   as present in the current window */
+                hash[s.charAt(j)] = 1;
+                
+                /* Calculate the length of
+                   the current substring */
+                int len = j - i + 1;
+                
+                /* Update maxLen if the current
+                   substring length is greater */
+                maxLen = Math.max(maxLen, len);
+            }
+        }
+        
+        // Return the maximum length
+        return maxLen;
+    }
+Complexity Analysis: 
+Time Complexity:O(N2), where N is the size of the array. Iterating the array twice using two for loops.
+
+Space Complexity: O(256) . Hash array to store all the characters.
+
+    Optimal:
+     /* Function to find the longest substring
+       without repeating characters */
+    public int longestNonRepeatingSubstring(String s) {
+        int n = s.length();
+        
+        // Assuming all ASCII characters
+        int HashLen = 256; 
+        
+        /* Hash table to store last
+           occurrence of each character */
+        int[] hash = new int[HashLen];
+        
+        /* Initialize hash table with
+           -1 (indicating no occurrence) */
+        Arrays.fill(hash, -1);
+
+        int l = 0, r = 0, maxLen = 0;
+        while (r < n) {
+            /* If current character s.charAt(r) 
+               is already in the substring */
+            if (hash[s.charAt(r)] >= l) {
+                /* Move left pointer to the right
+                   of the last occurrence of s.charAt(r) */
+                l = Math.max(hash[s.charAt(r)] + 1, l);
+            }
+            
+            // Calculate the current substring length
+            int len = r - l + 1;
+            
+            // Update maximum length found so far
+            maxLen = Math.max(len, maxLen);
+            
+            /* Store the index of the current
+               character in the hash table */
+            hash[s.charAt(r)] = r;
+            
+            // Move right pointer to next position
+            r++;
+        }
+       
+        // Return the maximum length found
+        return maxLen;
+    }
+    Complexity Analysis: 
+Time Complexity:O(N), where N is the size of the array. As the array runs for N times.
+
+Space Complexity: O(256) . Hash array to store all the characters.
