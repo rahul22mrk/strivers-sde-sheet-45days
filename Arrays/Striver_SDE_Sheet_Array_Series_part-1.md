@@ -1,7 +1,7 @@
 # 📒 Striver SDE Sheet - Part 1 (Q1-Q14)
 
 > **Interactive Revision Guide** — Click ▶ to expand solutions. Click problem names in index to jump directly.
-> 📄 **[→ Part 2 (Q15-Q28 + Pattern Guide)](Striver_SDE_Sheet_Notes_Part2.md)**
+> 📄 **[→ Part 2 (Q15-Q28 + Pattern Guide)](Striver_SDE_Sheet_Array_Series_part-2.md)**
 
 ---
 
@@ -17,21 +17,21 @@
 
 | # | Pattern | Problems |
 |---|---------|----------|
-| A | **Two Pointer** | [Q3](#q3-next-permutation), [Q5](#q5-sort-colors-dutch-national-flag), [Q9](#q9-merge-two-sorted-arrays-without-extra-space), [Q19](Striver_SDE_Sheet_Notes_Part2.md#q19-two-sum), [Q25](Striver_SDE_Sheet_Notes_Part2.md#q25-3-sum), [Q20](Striver_SDE_Sheet_Notes_Part2.md#q20-4-sum), [Q26](Striver_SDE_Sheet_Notes_Part2.md#q26-trapping-rainwater), [Q27](Striver_SDE_Sheet_Notes_Part2.md#q27-remove-duplicates-from-sorted-array) |
-| B | **Sliding Window** | [Q24](Striver_SDE_Sheet_Notes_Part2.md#q24-longest-substring-without-repeating-characters), [Q22](Striver_SDE_Sheet_Notes_Part2.md#q22-largest-subarray-with-k-sum) (positive) |
-| C | **Prefix Sum / Prefix XOR** | [Q22](Striver_SDE_Sheet_Notes_Part2.md#q22-largest-subarray-with-k-sum) (negatives), [Q23](Striver_SDE_Sheet_Notes_Part2.md#q23-count-subarrays-with-given-xor-k) |
+| A | **Two Pointer** | [Q3](#q3-next-permutation), [Q5](#q5-sort-colors-dutch-national-flag), [Q9](#q9-merge-two-sorted-arrays-without-extra-space), [Q19](Striver_SDE_Sheet_Array_Series_part-2.md#q19-two-sum), [Q25](Striver_SDE_Sheet_Array_Series_part-2.md#q25-3-sum), [Q20](Striver_SDE_Sheet_Array_Series_part-2.md#q20-4-sum), [Q26](Striver_SDE_Sheet_Array_Series_part-2.md#q26-trapping-rainwater), [Q27](Striver_SDE_Sheet_Array_Series_part-2.md#q27-remove-duplicates-from-sorted-array) |
+| B | **Sliding Window** | [Q24](Striver_SDE_Sheet_Array_Series_part-2.md#q24-longest-substring-without-repeating-characters), [Q22](Striver_SDE_Sheet_Array_Series_part-2.md#q22-largest-subarray-with-k-sum) (positive) |
+| C | **Prefix Sum / Prefix XOR** | [Q22](Striver_SDE_Sheet_Array_Series_part-2.md#q22-largest-subarray-with-k-sum) (negatives), [Q23](Striver_SDE_Sheet_Array_Series_part-2.md#q23-count-subarrays-with-given-xor-k) |
 | D | **Kadane's Algorithm** | [Q4](#q4-maximum-subarray-kadanes-algorithm) |
-| E | **HashMap / HashSet** | [Q19](Striver_SDE_Sheet_Notes_Part2.md#q19-two-sum) (HashMap), [Q21](Striver_SDE_Sheet_Notes_Part2.md#q21-longest-consecutive-sequence-in-an-array) |
-| F | **Boyer-Moore Voting** | [Q15](Striver_SDE_Sheet_Notes_Part2.md#q15-majority-element-i), [Q16](Striver_SDE_Sheet_Notes_Part2.md#q16-majority-element-ii) |
+| E | **HashMap / HashSet** | [Q19](Striver_SDE_Sheet_Array_Series_part-2.md#q19-two-sum) (HashMap), [Q21](Striver_SDE_Sheet_Array_Series_part-2.md#q21-longest-consecutive-sequence-in-an-array) |
+| F | **Boyer-Moore Voting** | [Q15](Striver_SDE_Sheet_Array_Series_part-2.md#q15-majority-element-i), [Q16](Striver_SDE_Sheet_Array_Series_part-2.md#q16-majority-element-ii) |
 | G | **Binary Search** | [Q13](#q13-search-in-a-2d-matrix), [Q14](#q14-powx-n) (Binary Exponentiation) |
-| H | **Merge Sort (Divide & Conquer)** | [Q12](#q12-count-inversions), [Q18](Striver_SDE_Sheet_Notes_Part2.md#q18-reverse-pairs) |
+| H | **Merge Sort (Divide & Conquer)** | [Q12](#q12-count-inversions), [Q18](Striver_SDE_Sheet_Array_Series_part-2.md#q18-reverse-pairs) |
 | I | **Floyd's Cycle Detection** | [Q10](#q10-find-the-duplicate-number) |
 | J | **Matrix Manipulation** | [Q1](#q1-set-matrix-zeroes), [Q7](#q7-rotate-matrix-by-90) |
-| K | **Math / Combinatorics / DP** | [Q2](#q2-pascals-triangle), [Q17](Striver_SDE_Sheet_Notes_Part2.md#q17-grid-unique-paths) |
+| K | **Math / Combinatorics / DP** | [Q2](#q2-pascals-triangle), [Q17](Striver_SDE_Sheet_Array_Series_part-2.md#q17-grid-unique-paths) |
 | L | **Sorting + Merging** | [Q8](#q8-merge-overlapping-subintervals) |
 | M | **Sign Marking / In-place** | [Q11](#q11-find-the-repeating-and-missing-number) |
 | N | **Greedy** | [Q6](#q6-best-time-to-buy-and-sell-stock) |
-| O | **Linear Scan** | [Q28](Striver_SDE_Sheet_Notes_Part2.md#q28-maximum-consecutive-ones) |
+| O | **Linear Scan** | [Q28](Striver_SDE_Sheet_Array_Series_part-2.md#q28-maximum-consecutive-ones) |
 
 ---
 
@@ -53,7 +53,7 @@
 | 12 | [Count Inversions](#q12-count-inversions) | H. Merge Sort (Divide & Conquer) | O(n log n) | O(n) |
 | 13 | [Search in 2D Matrix](#q13-search-in-a-2d-matrix) | G. Binary Search | O(log(n×m)) | O(1) |
 | 14 | [Pow(x, n)](#q14-powx-n) | G. Binary Search (Binary Exponentiation) | O(log n) | O(log n) |
-| 15-28 | [→ See Part 2](Striver_SDE_Sheet_Notes_Part2.md#-detailed-solutions-q15-q28) | | | |
+| 15-28 | [→ See Part 2](Striver_SDE_Sheet_Array_Series_part-2.md#-detailed-solutions-q15-q28) | | | |
 
 ---
 
@@ -1490,6 +1490,6 @@ Space Complexity :The space complexity is O(log n) because of the recursive call
 
 ---
 
-📄 **Continue to [Part 2 (Q15-Q28 + Pattern Guide)](Striver_SDE_Sheet_Notes_Part2.md) →**
+📄 **Continue to [Part 2 (Q15-Q28 + Pattern Guide)](Striver_SDE_Sheet_Array_Series_part-2.md) →**
 </task_progress>
 </write_to_file>
