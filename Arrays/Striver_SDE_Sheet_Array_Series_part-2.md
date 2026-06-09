@@ -1,6 +1,6 @@
 # 📒 Striver SDE Sheet - Part 2 (Q15-Q28 + Pattern Guide)
 
-> 📄 **[← Part 1 (Q1-Q14)](Striver_SDE_Sheet_Notes_Part1.md)**
+> 📄 **[← Part 1 (Q1-Q14)](Striver_SDE_Sheet_Array_Series_part-1.md)**
 
 ---
 
@@ -914,7 +914,7 @@ public int findMaxConsecutiveOnes(int[] nums) {
 ## 🧠 Pattern Identification Guide & Universal Templates
 
 > **How to identify which pattern applies to a problem, and the universal template to code it.**
-> 📄 **[← Back to Part 1](Striver_SDE_Sheet_Notes_Part1.md)**
+> 📄 **[← Back to Part 1](Striver_SDE_Sheet_Array_Series_part-1.md)**
 
 ---
 
@@ -1287,6 +1287,6 @@ for (int num : nums) {
 
 ---
 
-📄 **[← Back to Part 1 (Q1-Q14)](Striver_SDE_Sheet_Notes_Part1.md)**
+📄 **[← Back to Part 1 (Q1-Q14)](Striver_SDE_Sheet_Array_Series_part-1.md)**
 </task_progress>
 </write_to_file>
