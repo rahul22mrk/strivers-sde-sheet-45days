@@ -13,7 +13,7 @@
 13.   Rotate a LL
 14.   Clone a LL with random and next pointer
 
-
+**********************************************************************************************
 
 1.    Reverse a LL
 Iterative Approach : 
@@ -281,28 +281,166 @@ return head;
 4.    Remove Nth node from the back of the LL
 
 
+Brute:
+// Function to remove the nth node from end
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null) {
+            return null;
+        }
+        int cnt = 0;
+        ListNode temp = head;
 
+        // Count the number of nodes
+        while (temp != null) {
+            cnt++;
+            temp = temp.next;
+        }
 
+        /* If N equals 
+        the total number of nodes
+        delete the head */
+        if (cnt == n) {
+            ListNode newHead = head.next;
+            return newHead;
+        }
 
+        /* Calculate the position 
+        of the node to delete (res) */
+        int res = cnt - n;
+        temp = head;
 
+        /* Traverse to the node 
+        just before the one to delete */
+        while (temp != null) {
+            res--;
+            if (res == 0) {
+                break;
+            }
+            temp = temp.next;
+        }
+
+        // Delete the Nth node from the end
+        ListNode delNode = temp.next;
+        temp.next = temp.next.next;
+        return head;
+    }
+Complexity Analysis
+Time Complexity: O(L) + O(L-N) We are calculating the length of the linked list and then iterating up to the (L-N)th node of the linked list, where L is the total length of the list and N is the position of the node to delete.
+
+Space Complexity: O(1) as we have not used any extra space.
+
+  optimal:
+    
+// Function to remove the nth node from end
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        // Creating pointers
+        ListNode fastp = head;
+        ListNode slowp = head;
+
+        /* Move the fastp pointer 
+        N nodes ahead */
+        for (int i = 0; i < n; i++) {
+            fastp = fastp.next;
+        }
+
+        /* If fastp becomes NULL
+        the Nth node from the 
+        end is the head */
+        if (fastp == null) {
+            return head.next;
+        }
+
+        /* Move both pointers 
+        Until fastp reaches the end */
+        while (fastp.next != null) {
+            fastp = fastp.next;
+            slowp = slowp.next;
+        }
+
+        // Delete the Nth node from the end
+        slowp.next = slowp.next.next;
+        return head;
+    }
+}
+
+Complexity Analysis
+Time Complexity: O(N) since the fast pointer will traverse the entire linked list, where N is the length of the linked list.
+
+Space Complexity: O(1), as we have not used any extra space
 
 
 
 5.    Add two numbers as LinkedList
 
 
+ // Function to add two numbers as linked list
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        /* Dummy node to act as the 
+        starting point of the result list */
+        ListNode dummy = new ListNode();
+        /* Temp pointer to build 
+        the result list */
+        ListNode temp = dummy;
+        // Initialize carry
+        int carry = 0;
 
+        /* Iterate while there are nodes in l1 or l2, 
+        or there's a carry to process */
+        while ((l1 != null || l2 != null) || carry != 0) {
+            int sum = 0;
 
+            /* Add the value from l1 
+            if available */
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
 
+            /* Add the value from l2 
+            if available */
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+
+            // Add the carry
+            sum += carry;
+            // Update the carry
+            carry = sum / 10;
+
+            /* Create a new node with the digit value 
+            and attach it to the result list */
+            ListNode node = new ListNode(sum % 10);
+            temp.next = node;
+            /* Move to the 
+            next position in the result list */
+            temp = temp.next;
+        }
+        /* Return the result list
+        skipping the dummy node */
+        return dummy.next;
+    }
+
+Complexity Analysis
+Time Complexity: O(max(M, N)) Here, M and N represent the sizes of the linked lists l1 and l2, respectively. The algorithm traverses both lists at most once, hence, the time complexity depends on the length of the longer list.
+
+Space Complexity: O(max(M,N)) The length of the new list is at most max(M, N)+1.
 
 
 
 
 6.    Delete Node in a Linked List O(1)
 
+ public void deleteNode(ListNode node) {
+        // Copy value from next node
+        node.val = node.next.val;
+        // Skip the next node
+        node.next = node.next.next;
+    }
 
-
-
+Time and Space Complexity
+Time Complexity: O(1), we only copy the next node's value and modify the links between nodes..
+Space Complexity: O(1), only a constant amount of extra space is used.
 
 
 
