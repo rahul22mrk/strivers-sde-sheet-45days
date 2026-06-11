@@ -51,7 +51,9 @@ Use two pointers moving at different speeds through the list. The **slow pointer
 - **Find cycle start** → After meeting, reset one pointer to head, move both 1 step
 - **Find palindrome** → Use slow-fast to find middle, then reverse second half
 
-### 📐 Mathematical Intuition
+<details>
+<summary>📐 Mathematical Intuition (Click to expand)</summary>
+
 ```
 Before loop:    L nodes (from head to loop start)
 Inside loop:    C nodes (loop length)
@@ -72,7 +74,10 @@ When slow and fast meet:
   That's why resetting one pointer to head and moving both by 1 works.
 ```
 
-### 🧩 Global Template
+</details>
+
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
 // ===== TEMPLATE: Slow-Fast Pointer =====
@@ -113,23 +118,16 @@ while (fast.next != null && fast.next.next != null) {
 // slow is at FIRST middle (for even length) or exact middle (for odd)
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q2. Find Middle of Linked List ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q2-find-middle-of-linked-list)
-- **Approach**: Slow moves 1, fast moves 2. When fast reaches end, slow is at middle.
-- **Key Insight**: For even length, slow lands on **second middle** (standard). Use `fast.next != null && fast.next.next != null` for **first middle**.
-
-#### [Q8. Detect a Loop in LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q8-detect-a-loop-in-ll)
-- **Approach**: If slow and fast ever meet → cycle exists. If fast reaches null → no cycle.
-- **Key Insight**: In a cycle, fast "laps" slow. The gap decreases by 1 each step, so they MUST meet.
-
-#### [Q10. Check if LL is Palindrome ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q10-check-if-ll-is-palindrome-or-not)
-- **Approach**: Use slow-fast to find middle → reverse second half → compare both halves → restore.
-- **Key Insight**: Combines **Slow-Fast + Reversal** patterns. Always restore the list after!
-
-#### [Q11. Find the Starting Point of Loop ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q11-find-the-starting-point-in-ll)
-- **Approach**: Detect cycle (slow-fast meet) → reset slow to head → move both by 1 → meet at start.
-- **Key Insight**: Mathematical proof: `L = m*C - K`. From meeting point and head, same distance to loop start.
+| Question | Key Insight |
+|----------|-------------|
+| [Q2. Find Middle ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q2-find-middle-of-linked-list) | Slow moves 1, fast moves 2. For **first middle** use `fast.next != null && fast.next.next != null` |
+| [Q8. Detect Loop ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q8-detect-a-loop-in-ll) | If slow and fast meet → cycle. Fast "laps" slow, gap decreases by 1 each step |
+| [Q10. Palindrome ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q10-check-if-ll-is-palindrome-or-not) | Combines **Slow-Fast + Reversal**. Always restore the list after! |
+| [Q11. Loop Start ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q11-find-the-starting-point-in-ll) | After detection, reset slow to head, move both by 1. Math: `L = m*C - K` |
 
 ---
 
@@ -144,7 +142,9 @@ Reverse the direction of `next` pointers so the list flows in the opposite direc
 - **Process from end** → Reverse first, then process, then reverse back
 - **Compare halves** → Reverse one half, compare, then restore
 
-### 📐 How It Works (3-Pointer Approach)
+<details>
+<summary>📐 How It Works - 3-Pointer Approach (Click to expand)</summary>
+
 ```
 Initial:  NULL ← [prev]    [head/curr] → [2] → [3] → NULL
                               ↑temp
@@ -166,37 +166,32 @@ Continue until temp == null.
 prev is the new head.
 ```
 
-### 🧩 Global Template
+</details>
+
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
 // ===== TEMPLATE: Iterative Reversal =====
 public ListNode reverseLinkedList(ListNode head) {
     ListNode prev = null;
     ListNode curr = head;
-    
     while (curr != null) {
         ListNode nextNode = curr.next;  // Step 1: Save next
         curr.next = prev;               // Step 2: Reverse link
         prev = curr;                     // Step 3: Move prev
         curr = nextNode;                 // Step 4: Move curr
     }
-    
     return prev;  // New head
 }
 
 // ===== TEMPLATE: Recursive Reversal =====
 public ListNode reverseLinkedList(ListNode head) {
-    // Base case
     if (head == null || head.next == null) return head;
-    
-    // Recursive call reverses the rest
     ListNode newHead = reverseLinkedList(head.next);
-    
-    // Reverse the link
     ListNode front = head.next;
     front.next = head;
     head.next = null;
-    
     return newHead;
 }
 
@@ -204,56 +199,39 @@ public ListNode reverseLinkedList(ListNode head) {
 public ListNode reverseKGroup(ListNode head, int k) {
     ListNode temp = head;
     ListNode prevLast = null;
-    
     while (temp != null) {
         ListNode kThNode = getKthNode(temp, k);
-        
-        if (kThNode == null) {          // Incomplete group
+        if (kThNode == null) {
             if (prevLast != null) prevLast.next = temp;
             break;
         }
-        
         ListNode nextNode = kThNode.next;
-        kThNode.next = null;             // Disconnect for reversal
-        reverseLinkedList(temp);          // Reverse the group
-        
-        if (temp == head) {
-            head = kThNode;              // First group: update head
-        } else {
-            prevLast.next = kThNode;     // Connect previous group
-        }
-        
-        prevLast = temp;                  // temp is now the LAST node of reversed group
-        temp = nextNode;                  // Move to next group
+        kThNode.next = null;
+        reverseLinkedList(temp);
+        if (temp == head) head = kThNode;
+        else prevLast.next = kThNode;
+        prevLast = temp;
+        temp = nextNode;
     }
-    
     return head;
 }
 
-// Helper: Get Kth node from current position
 private ListNode getKthNode(ListNode temp, int k) {
     k -= 1;
-    while (temp != null && k > 0) {
-        k--;
-        temp = temp.next;
-    }
+    while (temp != null && k > 0) { k--; temp = temp.next; }
     return temp;
 }
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q1. Reverse a Linked List ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q1-reverse-a-linked-list)
-- **Iterative**: 3-pointer (prev, curr, next). O(N) time, O(1) space.
-- **Recursive**: Reverse rest, then fix current node. O(N) time, O(N) space (call stack).
-
-#### [Q9. Reverse LL in Group of Given Size K ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q9-reverse-ll-in-group-of-given-size-k)
-- **Approach**: Get Kth node → disconnect → reverse group → reconnect → move to next group.
-- **Key Insight**: After reversal, `temp` (original group start) becomes the LAST node. `kThNode` becomes the FIRST node (new head of group).
-
-#### [Q10. Check if LL is Palindrome ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q10-check-if-ll-is-palindrome-or-not)
-- **Approach**: Find middle (slow-fast) → reverse second half → compare → restore.
-- **Key Insight**: Reversal is used as a **sub-operation** here. Always restore the list after comparison!
+| Question | Key Insight |
+|----------|-------------|
+| [Q1. Reverse LL ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q1-reverse-a-linked-list) | Iterative O(1) space preferred. After reversal, `prev` = new head |
+| [Q9. Reverse K Group ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q9-reverse-ll-in-group-of-given-size-k) | After reversal, `temp` becomes LAST node, `kThNode` becomes FIRST |
+| [Q10. Palindrome ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q10-check-if-ll-is-palindrome-or-not) | Reversal as sub-operation. Always restore the list after! |
 
 ---
 
@@ -267,129 +245,80 @@ Traverse two sorted linked lists simultaneously, picking the smaller element at 
 - **Flatten a list with child pointers** → Merge pairs of vertical lists recursively
 - **Any "combine two sorted sequences"** problem
 
-### 📐 How It Works
-```
-List 1:  1 → 3 → 5
-List 2:  2 → 4 → 6
-
-Step: Compare heads, pick smaller, advance that list
-Result: 1 → 2 → 3 → 4 → 5 → 6
-
-Key: Don't create new nodes! Just relink existing nodes.
-```
-
-### 🧩 Global Template
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
 // ===== TEMPLATE: Merge Two Sorted Lists =====
 public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
     ListNode dummy = new ListNode(-1);
     ListNode temp = dummy;
-    
     while (list1 != null && list2 != null) {
-        if (list1.val <= list2.val) {
-            temp.next = list1;
-            list1 = list1.next;
-        } else {
-            temp.next = list2;
-            list2 = list2.next;
-        }
+        if (list1.val <= list2.val) { temp.next = list1; list1 = list1.next; }
+        else { temp.next = list2; list2 = list2.next; }
         temp = temp.next;
     }
-    
-    // Attach remaining nodes (no loop needed!)
     if (list1 != null) temp.next = list1;
     else temp.next = list2;
-    
     return dummy.next;
 }
 
 // ===== TEMPLATE: Flatten Linked List (Recursive Merge) =====
 public ListNode flattenLinkedList(ListNode head) {
     if (head == null || head.next == null) return head;
-    
-    // Recursively flatten the rest
     ListNode mergedHead = flattenLinkedList(head.next);
-    
-    // Merge current vertical list with flattened rest
     head = merge(head, mergedHead);
     return head;
 }
 
-// Merge using child pointers instead of next
 private ListNode merge(ListNode list1, ListNode list2) {
     ListNode dummy = new ListNode(-1);
     ListNode res = dummy;
-    
     while (list1 != null && list2 != null) {
-        if (list1.val < list2.val) {
-            res.child = list1;
-            res = list1;
-            list1 = list1.child;
-        } else {
-            res.child = list2;
-            res = list2;
-            list2 = list2.child;
-        }
-        res.next = null;  // Disconnect next pointer
+        if (list1.val < list2.val) { res.child = list1; res = list1; list1 = list1.child; }
+        else { res.child = list2; res = list2; list2 = list2.child; }
+        res.next = null;
     }
-    
     if (list1 != null) res.child = list1;
     else res.child = list2;
-    
     if (dummy.child != null) dummy.child.next = null;
     return dummy.child;
 }
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q3. Merge Two Sorted Lists ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q3-merge-two-sorted-lists)
-- **Optimal**: Two-pointer traversal with dummy node. O(N1+N2) time, O(1) space.
-- **Key Insight**: Relink existing nodes, don't create new ones. Attach remaining list in one step.
-
-#### [Q12. Flattening of LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q12-flattening-of-ll)
-- **Optimal**: Recursively flatten rest → merge current with flattened result.
-- **Key Insight**: Uses `child` pointers instead of `next`. Always set `next = null` after merge to prevent cycles.
+| Question | Key Insight |
+|----------|-------------|
+| [Q3. Merge Sorted Lists ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q3-merge-two-sorted-lists) | Relink existing nodes, attach remaining in one step. O(1) space |
+| [Q12. Flattening ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q12-flattening-of-ll) | Uses `child` pointers. Always set `next = null` after merge |
 
 ---
 
 ## Pattern 4: Dummy Node Technique
 
 ### 🎯 Core Concept
-Create a placeholder "dummy" node before the actual head. This eliminates special-case handling for the head node (insertion at beginning, empty list, etc.).
+Create a placeholder "dummy" node before the actual head. This eliminates special-case handling for the head node.
 
 ### 🔍 When to Identify
 - **Building a new list** from scratch
 - **Merging lists** where head is determined later
-- **Any operation** where the head might change
 - **Carry propagation** (add two numbers)
 
-### 📐 How It Works
-```
-Without dummy: Need to handle head separately
-  if (head == null) head = newNode;  // special case
-  else { ... find last, attach }
-
-With dummy: Uniform handling
-  dummy → [build here] → ...
-  return dummy.next;  // skip dummy, get real head
-```
-
-### 🧩 Global Template
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
 // ===== TEMPLATE: Dummy Node Pattern =====
-ListNode dummy = new ListNode(-1);  // Placeholder
-ListNode temp = dummy;               // Builder pointer
-
-// Build the list uniformly (no head special case)
+ListNode dummy = new ListNode(-1);
+ListNode temp = dummy;
 while (/* condition */) {
-    temp.next = someNode;  // Always attach to temp.next
-    temp = temp.next;      // Move builder forward
+    temp.next = someNode;
+    temp = temp.next;
 }
-
-return dummy.next;  // Real head is after dummy
+return dummy.next;
 
 // ===== TEMPLATE: Array to Linked List (using dummy) =====
 ListNode dummy = new ListNode(-1);
@@ -401,31 +330,24 @@ for (int val : arr) {
 return dummy.next;
 
 // ===== TEMPLATE: Array to Linked List (without dummy) =====
-ListNode head = null;
-ListNode temp = null;
+ListNode head = null, temp = null;
 for (int val : arr) {
     ListNode newNode = new ListNode(val);
-    if (head == null) {
-        head = newNode;     // Special case for head
-        temp = newNode;
-    } else {
-        temp.next = newNode;
-        temp = temp.next;
-    }
+    if (head == null) { head = newNode; temp = newNode; }
+    else { temp.next = newNode; temp = temp.next; }
 }
 return head;
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q3. Merge Two Sorted Lists ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q3-merge-two-sorted-lists)
-- Dummy node handles the case where either list could provide the first element.
-
-#### [Q5. Add Two Numbers as LinkedList ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q5-add-two-numbers-as-linkedlist)
-- Dummy node handles the case where the result list is built digit by digit with carry.
-
-#### [Q12. Flattening of LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q12-flattening-of-ll)
-- Dummy node used in the merge helper function for child-pointer lists.
+| Question | Key Insight |
+|----------|-------------|
+| [Q3. Merge Sorted Lists ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q3-merge-two-sorted-lists) | Dummy handles case where either list could provide first element |
+| [Q5. Add Two Numbers ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q5-add-two-numbers-as-linkedlist) | Result built digit by digit with carry |
+| [Q12. Flattening ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q12-flattening-of-ll) | Dummy in merge helper for child-pointer lists |
 
 ---
 
@@ -438,9 +360,7 @@ Use a HashSet or HashMap to store node references as you traverse. This allows O
 - **Detect cycle/loop** → If you see a node again, there's a cycle
 - **Find intersection** → Store one list's nodes, check against the other
 - **Clone with random pointers** → Map original nodes to their copies
-- **Find cycle start** → First repeated node is the cycle start
 
-### 📐 When to Use vs. Slow-Fast
 | Scenario | Hashing | Slow-Fast |
 |----------|---------|-----------|
 | Need O(1) space | ❌ O(N) space | ✅ O(1) space |
@@ -448,7 +368,8 @@ Use a HashSet or HashMap to store node references as you traverse. This allows O
 | Simpler to code | ✅ Intuitive | Needs math proof |
 | Interview preference | Brute/Better | Optimal ✅ |
 
-### 🧩 Global Template
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
 // ===== TEMPLATE: HashSet for Cycle Detection =====
@@ -463,13 +384,8 @@ return null;  // or false
 
 // ===== TEMPLATE: HashMap for Cloning =====
 HashMap<ListNode, ListNode> map = new HashMap<>();
-// Pass 1: Create copies
 ListNode temp = head;
-while (temp != null) {
-    map.put(temp, new ListNode(temp.val));
-    temp = temp.next;
-}
-// Pass 2: Set pointers
+while (temp != null) { map.put(temp, new ListNode(temp.val)); temp = temp.next; }
 temp = head;
 while (temp != null) {
     ListNode copy = map.get(temp);
@@ -480,33 +396,30 @@ while (temp != null) {
 return map.get(head);
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q7. Intersection Point of Y LL (Brute) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q7-find-the-intersection-point-of-y-ll)
-- Store all nodes of list A in HashSet → traverse list B → first match is intersection.
-
-#### [Q8. Detect a Loop in LL (Brute) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q8-detect-a-loop-in-ll)
-- Add each node to HashSet → if already exists, cycle detected.
-
-#### [Q11. Find Starting Point of Loop (Brute) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q11-find-the-starting-point-in-ll)
-- Add each node to HashMap → first repeated node is the cycle start.
-
-#### [Q14. Clone LL with Random Pointer (Brute) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q14-clone-a-ll-with-random-and-next-pointer)
-- Two-pass: Pass 1 creates copies in HashMap, Pass 2 sets next/random pointers using map.
+| Question | Key Insight |
+|----------|-------------|
+| [Q7. Intersection (Brute) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q7-find-the-intersection-point-of-y-ll) | Store list A nodes in HashSet → check list B |
+| [Q8. Detect Loop (Brute) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q8-detect-a-loop-in-ll) | Add each node to HashSet → if exists, cycle |
+| [Q11. Loop Start (Brute) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q11-find-the-starting-point-in-ll) | First repeated node in HashMap = cycle start |
+| [Q14. Clone Random (Brute) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q14-clone-a-ll-with-random-and-next-pointer) | Two-pass: create copies → set pointers using map |
 
 ---
 
 ## Pattern 6: In-Place Modification / O(1) Deletion
 
 ### 🎯 Core Concept
-Modify the linked list structure **in-place** without using extra data structures. This often involves clever pointer manipulation or value copying.
+Modify the linked list structure **in-place** without using extra data structures. Often involves clever pointer manipulation or value copying.
 
 ### 🔍 When to Identify
 - **Delete a node without head access** → Copy next node's value, skip next
 - **Clone list without HashMap** → Interleave copies between originals
-- **Any "O(1) space" constraint** on modification problems
 
-### 📐 Key Techniques
+<details>
+<summary>📐 Key Techniques (Click to expand)</summary>
 
 **Technique 1: Value Copy Deletion**
 ```
@@ -515,7 +428,7 @@ Delete B (but only have pointer to B):
 
 Step 1: Copy C's value to B: ... → [A] → [C'] → [C] → ...
 Step 2: Skip C: ... → [A] → [C'] → ...
-Result: B is effectively deleted (its value became C, and C was skipped)
+Result: B is effectively deleted
 ```
 
 **Technique 2: Interleaving Copies (for cloning)**
@@ -526,13 +439,16 @@ Set random: copy.random = original.random.next
 Separate: [1] → [2] → [3] → null  and  [1'] → [2'] → [3'] → null
 ```
 
-### 🧩 Global Template
+</details>
+
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
-// ===== TEMPLATE: O(1) Deletion (given node pointer only) =====
+// ===== TEMPLATE: O(1) Deletion =====
 public void deleteNode(ListNode node) {
-    node.val = node.next.val;    // Copy next node's value
-    node.next = node.next.next;  // Skip the next node
+    node.val = node.next.val;
+    node.next = node.next.next;
 }
 
 // ===== TEMPLATE: Clone with Random Pointer (In-Place) =====
@@ -553,11 +469,8 @@ void connectRandomPointers(ListNode head) {
     ListNode temp = head;
     while (temp != null) {
         ListNode copyNode = temp.next;
-        if (temp.random != null) {
-            copyNode.random = temp.random.next;  // original.random.next = its copy
-        } else {
-            copyNode.random = null;
-        }
+        if (temp.random != null) copyNode.random = temp.random.next;
+        else copyNode.random = null;
         temp = temp.next.next;
     }
 }
@@ -568,24 +481,23 @@ ListNode getDeepCopyList(ListNode head) {
     ListNode dummy = new ListNode(-1);
     ListNode res = dummy;
     while (temp != null) {
-        res.next = temp.next;       // Attach copy
+        res.next = temp.next;
         res = res.next;
-        temp.next = temp.next.next;  // Restore original
+        temp.next = temp.next.next;
         temp = temp.next;
     }
     return dummy.next;
 }
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q6. Delete Node in a Linked List O(1) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q6-delete-node-in-a-linked-list-o1)
-- **Approach**: Copy next node's value → skip next node. O(1) time and space.
-- **Key Insight**: You can't delete the node itself, but you can make it identical to the next node and delete that instead.
-
-#### [Q14. Clone a LL with Random and Next Pointer (Optimal) ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q14-clone-a-ll-with-random-and-next-pointer)
-- **Approach**: 3-step in-place: Insert copies → connect randoms → separate lists.
-- **Key Insight**: `copy.random = original.random.next` works because copies are right next to originals.
+| Question | Key Insight |
+|----------|-------------|
+| [Q6. Delete Node O(1) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q6-delete-node-in-a-linked-list-o1) | Copy next value + skip next. Can't work on tail node |
+| [Q14. Clone Random (Optimal) ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q14-clone-a-ll-with-random-and-next-pointer) | `copy.random = original.random.next` works because copies are interleaved |
 
 ---
 
@@ -597,9 +509,9 @@ When two linked lists of different lengths need to meet at a common point, first
 ### 🔍 When to Identify
 - **Find intersection of Y-shaped lists** → Align lengths, then move together
 - **Remove Nth node from end** → Create a gap of N between two pointers
-- **Any "two lists meet at same node"** problem
 
-### 📐 Key Intuition
+<details>
+<summary>📐 Key Intuition (Click to expand)</summary>
 
 **For Intersection:**
 ```
@@ -607,12 +519,9 @@ List A: [a1] → [a2] → [a3] ↘
                             [c1] → [c2] → null
 List B:       [b1] → [b2] ↗
 
-Length A = 5, Length B = 4, Diff = 1
-Move longer list's pointer 1 step ahead, then move both together.
-
-OR (Optimal): Switch heads when reaching end!
-Pointer 1: A → B (travels 5 + 4 = 9 steps)
-Pointer 2: B → A (travels 4 + 5 = 9 steps)
+Optimal: Switch heads when reaching end!
+Pointer 1: A → B (travels lenA + lenB steps)
+Pointer 2: B → A (travels lenB + lenA steps)
 They meet at intersection after same total distance!
 ```
 
@@ -625,89 +534,68 @@ Move both until fast.next == null: slow at [3]
 slow.next = slow.next.next → deletes [4]
 ```
 
-### 🧩 Global Template
+</details>
+
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
-// ===== TEMPLATE: Find Intersection (Switch Heads - Optimal) =====
+// ===== TEMPLATE: Find Intersection (Switch Heads) =====
 public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     if (headA == null || headB == null) return null;
-    
     ListNode d1 = headA, d2 = headB;
     while (d1 != d2) {
         d1 = d1.next;
         d2 = d2.next;
-        if (d1 == d2) return d1;       // Intersection found (or both null)
-        if (d1 == null) d1 = headB;    // Switch to other list
-        if (d2 == null) d2 = headA;    // Switch to other list
+        if (d1 == d2) return d1;
+        if (d1 == null) d1 = headB;
+        if (d2 == null) d2 = headA;
     }
     return d1;
 }
 
-// ===== TEMPLATE: Find Intersection (Length Alignment - Better) =====
-public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    int lenA = getLength(headA);
-    int lenB = getLength(headB);
-    
-    if (lenA < lenB) return collisionPoint(headA, headB, lenB - lenA);
-    return collisionPoint(headB, headA, lenA - lenB);
-}
-
+// ===== TEMPLATE: Find Intersection (Length Alignment) =====
 private ListNode collisionPoint(ListNode smaller, ListNode longer, int diff) {
     ListNode t1 = smaller, t2 = longer;
-    for (int i = 0; i < diff; i++) t2 = t2.next;  // Align
-    while (t1 != t2) {
-        t1 = t1.next;
-        t2 = t2.next;
-    }
+    for (int i = 0; i < diff; i++) t2 = t2.next;
+    while (t1 != t2) { t1 = t1.next; t2 = t2.next; }
     return t1;
 }
 
 // ===== TEMPLATE: Remove Nth Node from End =====
 public ListNode removeNthFromEnd(ListNode head, int n) {
     ListNode fast = head, slow = head;
-    
-    // Move fast N steps ahead
     for (int i = 0; i < n; i++) fast = fast.next;
-    
-    // If fast is null, delete head
     if (fast == null) return head.next;
-    
-    // Move both until fast reaches last node
-    while (fast.next != null) {
-        fast = fast.next;
-        slow = slow.next;
-    }
-    
-    // Delete the Nth node from end
+    while (fast.next != null) { fast = fast.next; slow = slow.next; }
     slow.next = slow.next.next;
     return head;
 }
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q4. Remove Nth Node from Back of LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q4-remove-nth-node-from-the-back-of-the-ll)
-- **Approach**: Move fast N steps ahead → move both until fast.next is null → slow.next is the node to delete.
-- **Key Insight**: The gap of N between fast and slow means when fast is at the end, slow is just before the target node.
-
-#### [Q7. Intersection Point of Y LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q7-find-the-intersection-point-of-y-ll)
-- **Optimal**: Switch heads when reaching end. Both pointers travel same total distance.
-- **Better**: Calculate lengths, align by moving longer list's pointer ahead, then move together.
-- **Key Insight**: After switching heads, both pointers travel `lenA + lenB` steps total, meeting at intersection.
+| Question | Key Insight |
+|----------|-------------|
+| [Q4. Remove Nth from Back ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q4-remove-nth-node-from-the-back-of-the-ll) | Gap of N between fast and slow. If fast==null after N steps, delete head |
+| [Q7. Intersection Y LL ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q7-find-the-intersection-point-of-y-ll) | Switch heads: both travel `lenA + lenB` total, meet at intersection |
 
 ---
 
 ## Pattern 8: Circular / Rotation Manipulation
 
 ### 🎯 Core Concept
-Temporarily convert the linked list into a circular list by connecting the tail to the head. Then find the new break point and sever the connection to create the rotated result.
+Temporarily convert the linked list into a circular list by connecting the tail to the head. Then find the new break point and sever the connection.
 
 ### 🔍 When to Identify
 - **Rotate list by K positions** → Find new tail, break circular link
 - **Any "shift elements circularly"** problem
-- **Reordering that wraps around** the end
 
-### 📐 How It Works
+<details>
+<summary>📐 How It Works (Click to expand)</summary>
+
 ```
 Original: 1 → 2 → 3 → 4 → 5, K = 2
 
@@ -722,52 +610,38 @@ Step 7: Break: temp.next = null
 Result: 4 → 5 → 1 → 2 → 3
 ```
 
-### 🧩 Global Template
+</details>
+
+<details>
+<summary>🧩 Global Template (Click to expand)</summary>
 
 ```java
-// ===== TEMPLATE: Rotate Linked List =====
 public ListNode rotateRight(ListNode head, int k) {
     if (head == null || head.next == null || k == 0) return head;
-    
-    // Step 1: Calculate length and find tail
     ListNode temp = head;
     int length = 1;
-    while (temp.next != null) {
-        length++;
-        temp = temp.next;
-    }
-    // temp is now at tail
-    
-    // Step 2: Make circular
-    temp.next = head;
-    
-    // Step 3: Handle k > length
-    k = k % length;
-    
-    // Step 4: Find new tail (length - k steps from head)
+    while (temp.next != null) { length++; temp = temp.next; }
+    temp.next = head;          // Make circular
+    k = k % length;            // Handle K > length
     int end = length - k;
     while (end-- > 0) temp = temp.next;
-    
-    // Step 5: New head and break circular link
-    head = temp.next;
-    temp.next = null;
-    
+    head = temp.next;          // New head
+    temp.next = null;          // Break circular link
     return head;
 }
 ```
 
+</details>
+
 ### 📋 Questions Under This Pattern
 
-#### [Q13. Rotate a LL ➡️ Part 2](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q13-rotate-a-ll)
-- **Optimal**: Make circular → find new tail → break. O(N) time, O(1) space.
-- **Brute**: Rotate one step at a time, K times. O(N×K) time.
-- **Key Insight**: Always do `k = k % length` to handle K > length. The new tail is at position `(length - k)` from head.
+| Question | Key Insight |
+|----------|-------------|
+| [Q13. Rotate LL ➡️](Striver_SDE_Sheet_LinkedList_Series_part-2.md#q13-rotate-a-ll) | Always `k = k % length`. New tail at `(length - k)` from head |
 
 ---
 
 ## 🔄 Pattern Combination Cheat Sheet
-
-Many problems combine multiple patterns. Here's how they compose:
 
 | Problem | Pattern 1 | Pattern 2 | Pattern 3 |
 |---------|-----------|-----------|-----------|
@@ -813,45 +687,31 @@ Given a Linked List problem, ask yourself:
 
 ## 🎯 Before You Start: Must-Know Basics
 
-### ListNode Definition
+<details>
+<summary>📋 ListNode Definition & Common Operations (Click to expand)</summary>
+
 ```java
+// ListNode Definition
 public class ListNode {
     int val;
     ListNode next;
     ListNode random;  // Only for Q14
-    
     ListNode() {}
     ListNode(int val) { this.val = val; }
     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
 }
-```
 
-### Common Operations Cheat Sheet
-```java
 // Traverse a linked list
 ListNode temp = head;
-while (temp != null) {
-    // process temp.val
-    temp = temp.next;
-}
+while (temp != null) { temp = temp.next; }
 
 // Count nodes
-int count = 0;
-ListNode temp = head;
+int count = 0; ListNode temp = head;
 while (temp != null) { count++; temp = temp.next; }
 
 // Get last node
 ListNode temp = head;
 while (temp.next != null) temp = temp.next;
-
-// Insert at end
-ListNode newNode = new ListNode(val);
-if (head == null) { head = newNode; }
-else {
-    ListNode temp = head;
-    while (temp.next != null) temp = temp.next;
-    temp.next = newNode;
-}
 
 // Delete a node (given prev)
 prev.next = prev.next.next;
@@ -859,6 +719,8 @@ prev.next = prev.next.next;
 // Delete head
 head = head.next;
 ```
+
+</details>
 
 ---
 
