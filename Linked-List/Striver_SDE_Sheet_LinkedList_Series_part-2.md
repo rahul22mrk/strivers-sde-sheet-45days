@@ -50,7 +50,9 @@
 
 **Intuition**: Use three pointers — `prev`, `temp` (current), and `front` (next). At each step, reverse the current node's pointer to point to `prev`, then move all three forward.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 Original: 1 → 2 → 3 → NULL
 
@@ -69,7 +71,11 @@ Step 3: prev=2, temp=3, front=NULL
 Result: 3 → 2 → 1 → NULL (prev is new head)
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode reverseList(ListNode head) {
     ListNode temp = head;
@@ -85,6 +91,8 @@ public ListNode reverseList(ListNode head) {
     return prev;  // New head
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
