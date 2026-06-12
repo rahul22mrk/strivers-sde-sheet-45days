@@ -1,6 +1,7 @@
 # 📖 Striver SDE Sheet - Linked List Series - Part 2: Sequence Wise Detailed Notes
 
 > **Question-by-question solutions with all approaches, code, and complexity analysis.**
+> **Click ▶ to expand Dry Runs & Code sections.**
 
 ---
 
@@ -22,21 +23,6 @@
 | 12 | [Flattening of LL](#q12-flattening-of-ll) | Merge + Recursion | Recursive flatten + merge | O(M×N²) | O(N) |
 | 13 | [Rotate a LL](#q13-rotate-a-ll) | Circular | Make circular + break | O(N) | O(1) |
 | 14 | [Clone LL with Random Pointer](#q14-clone-a-ll-with-random-and-next-pointer) | In-Place | Interleave copies | O(3N) | O(N) |
-
----
-
-## 📂 Pattern-wise Quick Navigation
-
-| Pattern | Questions |
-|---------|-----------|
-| [Slow-Fast Pointer](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-1-two-pointer-slow-fast--tortoise--hare) | Q2, Q8, Q10, Q11 |
-| [Reversal](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-2-linked-list-reversal) | Q1, Q9, Q10 |
-| [Merge / Two-List](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-3-merge--two-list-traversal) | Q3, Q12 |
-| [Dummy Node](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-4-dummy-node-technique) | Q3, Q5, Q12 |
-| [Hashing](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-5-hashing--node-tracking) | Q7(Brute), Q8(Brute), Q11(Brute), Q14(Brute) |
-| [In-Place Modification](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-6-in-place-modification--o1-deletion) | Q6, Q14 |
-| [Two-Pointer Alignment](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-7-two-pointer-intersection--alignment) | Q4, Q7 |
-| [Circular / Rotation](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-8-circular--rotation-manipulation) | Q13 |
 
 ---
 
@@ -85,7 +71,7 @@ public ListNode reverseList(ListNode head) {
         ListNode front = temp.next;  // Save next node
         temp.next = prev;            // Reverse the link
         prev = temp;                 // Move prev forward
-        temp = front;               // Move temp forward
+        temp = front;                // Move temp forward
     }
     
     return prev;  // New head
@@ -105,7 +91,9 @@ public ListNode reverseList(ListNode head) {
 
 **Intuition**: Recursively reverse the rest of the list first. Then make the next node point back to current node, and set current's next to null.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 reverseList(1→2→3→NULL)
   └─ reverseList(2→3→NULL)
@@ -117,27 +105,25 @@ reverseList(1→2→3→NULL)
 Result: 3 → 2 → 1 → NULL
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode reverseList(ListNode head) {
-    // Base case: empty or single node
     if (head == null || head.next == null) {
         return head;
     }
-    
-    // Reverse the rest of the list
     ListNode newHead = reverseList(head.next);
-    
-    // Make the next node point back to current
     ListNode front = head.next;
     front.next = head;
-    
-    // Remove the old forward link
     head.next = null;
-    
     return newHead;
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
@@ -163,30 +149,27 @@ public ListNode reverseList(ListNode head) {
 
 **Intuition**: First count total nodes, then traverse to the middle position.
 
-**Code**:
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode middleOfLinkedList(ListNode head) {
     ListNode temp = head;
     int count = 0;
-    
-    // Count total nodes
     while (temp != null) {
         count++;
         temp = temp.next;
     }
-    
-    // Calculate middle position
     int midPosition = count / 2 + 1;
-    
-    // Traverse to middle
     ListNode middleNode = head;
     for (int i = 1; i < midPosition; i++) {
         middleNode = middleNode.next;
     }
-    
     return middleNode;
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
@@ -199,36 +182,37 @@ public ListNode middleOfLinkedList(ListNode head) {
 
 **Intuition**: Slow pointer moves 1 step, fast pointer moves 2 steps. When fast reaches end, slow is at middle.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 Odd:  1 → 2 → 3 → 4 → 5
-      s,f=1
-      s=2, f=3
-      s=3, f=5 → fast.next=null → stop
+      s,f=1 → s=2,f=3 → s=3,f=5 → stop
       Middle = 3 ✅
 
 Even: 1 → 2 → 3 → 4 → 5 → 6
-      s,f=1
-      s=2, f=3
-      s=3, f=5
-      s=4, f=null → stop
+      s,f=1 → s=2,f=3 → s=3,f=5 → s=4,f=null → stop
       Middle = 4 (second middle) ✅
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode middleOfLinkedList(ListNode head) {
     ListNode slow = head;
     ListNode fast = head;
-    
     while (fast != null && fast.next != null) {
-        slow = slow.next;       // Move 1 step
-        fast = fast.next.next;  // Move 2 steps
+        slow = slow.next;
+        fast = fast.next.next;
     }
-    
     return slow;
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
@@ -240,7 +224,7 @@ public ListNode middleOfLinkedList(ListNode head) {
 ### ⚡ Key Takeaways
 - For **first middle** (even length): use `while (fast.next != null && fast.next.next != null)`
 - For **second middle** (even length): use `while (fast != null && fast.next != null)` ← standard
-- This is a **sub-operation** used in Q10 (Palindrome) and many other problems
+- This is a **sub-operation** used in Q10 (Palindrome)
 
 ---
 
@@ -254,116 +238,88 @@ public ListNode middleOfLinkedList(ListNode head) {
 
 **Intuition**: Extract all values into an array, sort, then create a new linked list.
 
-**Code**:
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
     ArrayList<Integer> arr = new ArrayList<>();
-    ListNode temp1 = list1;
-    ListNode temp2 = list2;
-
-    // Add all values from list1
-    while (temp1 != null) {
-        arr.add(temp1.val);
-        temp1 = temp1.next;
-    }
-
-    // Add all values from list2
-    while (temp2 != null) {
-        arr.add(temp2.val);
-        temp2 = temp2.next;
-    }
-
-    // Sort the array
+    ListNode temp1 = list1, temp2 = list2;
+    while (temp1 != null) { arr.add(temp1.val); temp1 = temp1.next; }
+    while (temp2 != null) { arr.add(temp2.val); temp2 = temp2.next; }
     Collections.sort(arr);
-
-    // Convert sorted array to linked list
     ListNode dummyNode = new ListNode(-1);
     ListNode temp = dummyNode;
     for (int i = 0; i < arr.size(); i++) {
         temp.next = new ListNode(arr.get(i));
         temp = temp.next;
     }
-
     return dummyNode.next;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N1+N2) + O(N log N) + O(N) — traverse + sort + rebuild |
+| **Time** | O(N1+N2) + O(N log N) + O(N) |
 | **Space** | O(N) + O(N) — array + new list |
 
 ---
 
 ### Approach 2: Optimal (Two-Pointer Merge with Dummy Node)
 
-**Intuition**: Since both lists are already sorted, compare heads and pick the smaller one. Use a dummy node to avoid head edge cases. **Relink existing nodes** instead of creating new ones.
+**Intuition**: Since both lists are already sorted, compare heads and pick the smaller one. **Relink existing nodes** instead of creating new ones.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 list1: 1 → 3 → 5
 list2: 2 → 4 → 6
 
-dummy(-1) → ?
-1 < 2: dummy → 1, list1 moves to 3
-3 > 2: 1 → 2, list2 moves to 4
-3 < 4: 2 → 3, list1 moves to 5
-5 > 4: 3 → 4, list2 moves to 6
-5 < 6: 4 → 5, list1 moves to null
+1 < 2: dummy → 1, list1→3
+3 > 2: 1 → 2, list2→4
+3 < 4: 2 → 3, list1→5
+5 > 4: 3 → 4, list2→6
+5 < 6: 4 → 5, list1→null
 list1 null: 5 → 6 (attach remaining)
-
 Result: 1 → 2 → 3 → 4 → 5 → 6
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
     ListNode dummyNode = new ListNode(-1);
     ListNode temp = dummyNode;
-
     while (list1 != null && list2 != null) {
-        if (list1.val <= list2.val) {
-            temp.next = list1;
-            list1 = list1.next;
-        } else {
-            temp.next = list2;
-            list2 = list2.next;
-        }
+        if (list1.val <= list2.val) { temp.next = list1; list1 = list1.next; }
+        else { temp.next = list2; list2 = list2.next; }
         temp = temp.next;
     }
-
-    // Attach remaining nodes (no loop needed!)
-    if (list1 != null) {
-        temp.next = list1;
-    } else {
-        temp.next = list2;
-    }
-
+    if (list1 != null) temp.next = list1;
+    else temp.next = list2;
     return dummyNode.next;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N1 + N2) — single pass through both lists |
-| **Space** | O(1) — only pointers, no new nodes created |
+| **Time** | O(N1 + N2) — single pass |
+| **Space** | O(1) — only pointers, no new nodes |
 
 ---
 
 ### ⚡ Key Takeaways
-- **Dummy node** eliminates the need to handle the first node specially
-- **Attach remaining list in one step** — no need to iterate through remaining nodes
-- This merge pattern is reused in **Q12 (Flattening)** and **Merge Sort for LL**
-- **Alternative**: Array-to-LL without dummy node:
-```java
-ListNode head = null, temp = null;
-for (int val : arr) {
-    ListNode newNode = new ListNode(val);
-    if (head == null) { head = newNode; temp = newNode; }
-    else { temp.next = newNode; temp = temp.next; }
-}
-return head;
-```
+- **Dummy node** eliminates head edge cases
+- **Attach remaining list in one step** — no loop needed
+- This merge pattern is reused in **Q12 (Flattening)**
 
 ---
 
@@ -377,99 +333,66 @@ return head;
 
 **Intuition**: Count total nodes, calculate position from front, traverse to the node before it, and delete.
 
-**Code**:
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode removeNthFromEnd(ListNode head, int n) {
     if (head == null) return null;
-    
     int cnt = 0;
     ListNode temp = head;
-
-    // Count total nodes
-    while (temp != null) {
-        cnt++;
-        temp = temp.next;
-    }
-
-    // If N equals total count, delete head
-    if (cnt == n) {
-        ListNode newHead = head.next;
-        return newHead;
-    }
-
-    // Calculate position from front
+    while (temp != null) { cnt++; temp = temp.next; }
+    if (cnt == n) return head.next;
     int res = cnt - n;
     temp = head;
-
-    // Traverse to node just before the one to delete
-    while (temp != null) {
-        res--;
-        if (res == 0) break;
-        temp = temp.next;
-    }
-
-    // Delete the Nth node from end
-    ListNode delNode = temp.next;
+    while (temp != null) { res--; if (res == 0) break; temp = temp.next; }
     temp.next = temp.next.next;
     return head;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(L) + O(L-N) = O(L) — two traversals |
+| **Time** | O(L) + O(L-N) = O(L) |
 | **Space** | O(1) |
 
 ---
 
 ### Approach 2: Optimal (Fast-Slow Gap)
 
-**Intuition**: Move `fast` N steps ahead first. Then move both `fast` and `slow` until `fast.next` is null. Now `slow` is just before the node to delete.
+**Intuition**: Move `fast` N steps ahead first. Then move both until `fast.next` is null. Now `slow` is just before the node to delete.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 List: 1 → 2 → 3 → 4 → 5, N = 2
 
-Step 1: Move fast N=2 steps ahead
-        fast at node 3, slow at node 1
-
-Step 2: Move both until fast.next is null
-        slow=2, fast=4
-        slow=3, fast=5 → fast.next=null, stop
-
-Step 3: Delete slow.next (node 4)
-        slow.next = slow.next.next
-
+Move fast N=2 steps: fast at 3, slow at 1
+Move both: slow=2,fast=4 → slow=3,fast=5 (fast.next=null, stop)
+Delete slow.next (node 4): slow.next = slow.next.next
 Result: 1 → 2 → 3 → 5
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode removeNthFromEnd(ListNode head, int n) {
-    ListNode fastp = head;
-    ListNode slowp = head;
-
-    // Move fast N steps ahead
-    for (int i = 0; i < n; i++) {
-        fastp = fastp.next;
-    }
-
-    // If fast becomes null, Nth from end is the head
-    if (fastp == null) {
-        return head.next;
-    }
-
-    // Move both until fast reaches last node
-    while (fastp.next != null) {
-        fastp = fastp.next;
-        slowp = slowp.next;
-    }
-
-    // Delete the Nth node from end
+    ListNode fastp = head, slowp = head;
+    for (int i = 0; i < n; i++) fastp = fastp.next;
+    if (fastp == null) return head.next;
+    while (fastp.next != null) { fastp = fastp.next; slowp = slowp.next; }
     slowp.next = slowp.next.next;
     return head;
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
@@ -480,8 +403,7 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 ### ⚡ Key Takeaways
 - The **gap of N** between fast and slow is the key insight
-- When `fast == null` after N steps, it means we need to **delete the head**
-- This is the same pattern as finding the Nth node from end, but we need the **node before it** to delete
+- When `fast == null` after N steps → **delete the head**
 
 ---
 
@@ -489,68 +411,62 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 **🔗 Pattern**: [Dummy Node](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-4-dummy-node-technique)
 
-**Problem**: You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each node contains a single digit. Add the two numbers and return the sum as a linked list.
+**Problem**: You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order. Add the two numbers and return the sum as a linked list.
 
 ### Approach: Digit-wise Addition with Carry
 
-**Intuition**: Add digits from both lists position by position (they're already in reverse order, so units digit comes first). Maintain a carry. Use a dummy node to build the result.
+**Intuition**: Add digits position by position (already in reverse order). Maintain a carry. Use a dummy node to build the result.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
-l1: 2 → 4 → 3  (represents 342)
-l2: 5 → 6 → 4  (represents 465)
+l1: 2 → 4 → 3  (342)
+l2: 5 → 6 → 4  (465)
 
-Step 1: 2+5 = 7, carry=0 → 7
-Step 2: 4+6 = 10, carry=1 → 0
-Step 3: 3+4+1 = 8, carry=0 → 8
+2+5 = 7, carry=0 → 7
+4+6 = 10, carry=1 → 0
+3+4+1 = 8, carry=0 → 8
 
-Result: 7 → 0 → 8  (represents 807 = 342+465)
+Result: 7 → 0 → 8  (807 = 342+465)
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
     ListNode dummy = new ListNode();
     ListNode temp = dummy;
     int carry = 0;
-
     while ((l1 != null || l2 != null) || carry != 0) {
         int sum = 0;
-
-        if (l1 != null) {
-            sum += l1.val;
-            l1 = l1.next;
-        }
-
-        if (l2 != null) {
-            sum += l2.val;
-            l2 = l2.next;
-        }
-
+        if (l1 != null) { sum += l1.val; l1 = l1.next; }
+        if (l2 != null) { sum += l2.val; l2 = l2.next; }
         sum += carry;
         carry = sum / 10;
-
         ListNode node = new ListNode(sum % 10);
         temp.next = node;
         temp = temp.next;
     }
-
     return dummy.next;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(max(M, N)) — traverse the longer list |
-| **Space** | O(max(M, N)) — result list length |
+| **Time** | O(max(M, N)) |
+| **Space** | O(max(M, N)) — result list |
 
 ---
 
 ### ⚡ Key Takeaways
-- **Carry must be checked in the while condition** — if both lists end but carry remains (e.g., 9+9=18), we need one more node
-- `sum % 10` gives the digit, `sum / 10` gives the carry
-- **Dummy node** is essential here since we don't know the head in advance
-- If digits were in **forward order**, you'd need to reverse both lists first, add, then reverse result
+- **Carry must be in while condition** — if both lists end but carry remains (e.g., 9+9=18)
+- `sum % 10` = digit, `sum / 10` = carry
 
 ---
 
@@ -562,29 +478,32 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 ### Approach: Value Copy + Skip
 
-**Intuition**: You can't delete the node itself (no access to previous node's next pointer). Instead, copy the next node's value into the current node, then skip the next node.
+**Intuition**: Copy the next node's value into the current node, then skip the next node.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
-List: 4 → 5 → 1 → 9
-Delete node with value 5 (given pointer to it)
+List: 4 → 5 → 1 → 9, Delete node 5
 
-Step 1: Copy next node's value: node.val = 1
-        List becomes: 4 → 1 → 1 → 9
-
-Step 2: Skip next node: node.next = node.next.next
-        List becomes: 4 → 1 → 9
-
-Result: 4 → 1 → 9 (5 is effectively deleted)
+Step 1: node.val = 1 → 4 → 1 → 1 → 9
+Step 2: node.next = node.next.next → 4 → 1 → 9
+Result: 4 → 1 → 9 (5 effectively deleted)
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public void deleteNode(ListNode node) {
-    node.val = node.next.val;     // Copy next node's value
-    node.next = node.next.next;   // Skip the next node
+    node.val = node.next.val;
+    node.next = node.next.next;
 }
 ```
+
+</details>
 
 | | Complexity |
 |---|---|
@@ -594,9 +513,8 @@ public void deleteNode(ListNode node) {
 ---
 
 ### ⚡ Key Takeaways
-- **Cannot work if node is the tail** — there's no next node to copy from
-- This is a **trick question** — the key insight is that you don't actually delete the given node, you make it a copy of the next node and delete the next node
-- **Constraint**: The node to delete is never the tail
+- **Cannot work if node is the tail** — no next node to copy from
+- You don't actually delete the given node — you make it a copy of the next node and delete that
 
 ---
 
@@ -608,132 +526,110 @@ public void deleteNode(ListNode node) {
 
 ### Approach 1: Brute (HashSet)
 
-**Intuition**: Store all nodes of list A in a HashSet. Then traverse list B and check if any node exists in the set.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     HashSet<ListNode> nodes_set = new HashSet<>();
-
-    while (headA != null) {
-        nodes_set.add(headA);
-        headA = headA.next;
-    }
-
+    while (headA != null) { nodes_set.add(headA); headA = headA.next; }
     while (headB != null) {
-        if (nodes_set.contains(headB)) {
-            return headB;
-        }
+        if (nodes_set.contains(headB)) return headB;
         headB = headB.next;
     }
-
     return null;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N + M) — traverse both lists |
-| **Space** | O(N) — store all nodes of list A |
+| **Time** | O(N + M) |
+| **Space** | O(N) |
 
 ---
 
 ### Approach 2: Better (Length Alignment)
 
-**Intuition**: Calculate lengths of both lists. Move the longer list's pointer ahead by the difference. Then move both together — they'll meet at the intersection.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-    ListNode temp1 = headA;
-    ListNode temp2 = headB;
+    ListNode temp1 = headA, temp2 = headB;
     int n1 = 0, n2 = 0;
-
-    // Get length of first list
     while (temp1 != null) { n1++; temp1 = temp1.next; }
-
-    // Get length of second list
     while (temp2 != null) { n2++; temp2 = temp2.next; }
-
-    // Align and find collision point
     if (n1 < n2) return collisionPoint(headA, headB, n2 - n1);
     return collisionPoint(headB, headA, n1 - n2);
 }
-
-private ListNode collisionPoint(ListNode smallerListHead, ListNode longerListHead, int len) {
-    ListNode temp1 = smallerListHead;
-    ListNode temp2 = longerListHead;
-
-    // Move longer list's pointer ahead by difference
-    for (int i = 0; i < len; i++) temp2 = temp2.next;
-
-    // Move both together
-    while (temp1 != temp2) {
-        temp1 = temp1.next;
-        temp2 = temp2.next;
-    }
-
-    return temp1;
+private ListNode collisionPoint(ListNode smaller, ListNode longer, int len) {
+    ListNode t1 = smaller, t2 = longer;
+    for (int i = 0; i < len; i++) t2 = t2.next;
+    while (t1 != t2) { t1 = t1.next; t2 = t2.next; }
+    return t1;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N + M) — calculate lengths + traverse aligned |
+| **Time** | O(N + M) |
 | **Space** | O(1) |
 
 ---
 
 ### Approach 3: Optimal (Switch Heads)
 
-**Intuition**: When either pointer reaches the end of its list, switch it to the head of the other list. Both pointers will travel the same total distance (lenA + lenB) and meet at the intersection.
+**Intuition**: When either pointer reaches the end, switch it to the head of the other list. Both travel same total distance.
 
-**Why it works**:
+<details>
+<summary>🔍 Why It Works (Click to expand)</summary>
+
 ```
 List A: a1 → a2 → a3 ↘
                        c1 → c2 → null
 List B:      b1 → b2 ↗
 
-Pointer 1 path: a1 → a2 → a3 → c1 → c2 → null → b1 → b2 → c1 (found!)
-Pointer 2 path: b1 → b2 → c1 → c2 → null → a1 → a2 → a3 → c1 (found!)
-
-Both travel 5 + 4 = 9 steps before meeting at c1.
+Pointer 1: A→B (travels lenA + lenB)
+Pointer 2: B→A (travels lenB + lenA)
+Same total distance → meet at intersection!
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     if (headA == null || headB == null) return null;
-
-    ListNode d1 = headA;
-    ListNode d2 = headB;
-
+    ListNode d1 = headA, d2 = headB;
     while (d1 != d2) {
         d1 = d1.next;
         d2 = d2.next;
-
-        if (d1 == d2) return d1;  // Intersection found (or both null = no intersection)
-
-        if (d1 == null) d1 = headB;  // Switch to other list
-        if (d2 == null) d2 = headA;  // Switch to other list
+        if (d1 == d2) return d1;
+        if (d1 == null) d1 = headB;
+        if (d2 == null) d2 = headA;
     }
-
     return d1;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N + M) — both pointers travel at most N+M steps |
+| **Time** | O(N + M) |
 | **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
-- **Compare node references**, not values — different nodes can have the same value
-- The **switch-heads trick** is elegant but the math proof is important for interviews
-- If no intersection exists, both pointers reach null simultaneously after N+M steps
-- The `if (d1 == d2) return d1` check AFTER moving both pointers handles the case where they meet at null (no intersection)
+- **Compare node references**, not values
+- If no intersection, both reach null simultaneously after N+M steps
 
 ---
 
@@ -745,70 +641,62 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
 
 ### Approach 1: Brute (HashSet)
 
-**Intuition**: Store each node in a HashSet as you traverse. If you encounter a node already in the set, there's a cycle.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public boolean hasCycle(ListNode head) {
     ListNode temp = head;
     HashSet<ListNode> nodeSet = new HashSet<>();
-
     while (temp != null) {
-        if (nodeSet.contains(temp)) {
-            return true;  // Cycle detected
-        }
+        if (nodeSet.contains(temp)) return true;
         nodeSet.add(temp);
         temp = temp.next;
     }
-
-    return false;  // No cycle
+    return false;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N) — each node visited once, HashSet ops are O(1) avg |
-| **Space** | O(N) — store all nodes in worst case |
+| **Time** | O(N) |
+| **Space** | O(N) |
 
 ---
 
 ### Approach 2: Optimal (Tortoise & Hare)
 
-**Intuition**: Slow moves 1 step, fast moves 2 steps. If there's a cycle, fast will eventually "lap" slow and they'll meet. If no cycle, fast reaches null.
+**Intuition**: Slow moves 1 step, fast moves 2 steps. If cycle exists, they'll meet. If no cycle, fast reaches null.
 
-**Why they must meet**: In a cycle, fast gains 1 step on slow each iteration. The gap decreases by 1 each time, so they MUST meet within C steps (C = cycle length).
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public boolean hasCycle(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
-
+    ListNode slow = head, fast = head;
     while (fast != null && fast.next != null) {
-        slow = slow.next;       // Move 1 step
-        fast = fast.next.next;  // Move 2 steps
-
-        if (slow == fast) {
-            return true;  // Cycle detected
-        }
+        slow = slow.next;
+        fast = fast.next.next;
+        if (slow == fast) return true;
     }
-
-    return false;  // No cycle
+    return false;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N) — fast pointer traverses the list |
-| **Space** | O(1) — only two pointers |
+| **Time** | O(N) |
+| **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
-- **HashSet approach** is intuitive but uses O(N) space
-- **Tortoise & Hare** is the optimal O(1) space solution
-- The condition `fast != null && fast.next != null` prevents null pointer exceptions
-- This is the **foundation** for Q11 (Find Starting Point of Loop)
+- In a cycle, fast gains 1 step on slow each iteration → gap decreases → they MUST meet
+- This is the **foundation** for Q11 (Find Starting Point)
 
 ---
 
@@ -820,32 +708,34 @@ public boolean hasCycle(ListNode head) {
 
 ### Approach: Reverse Groups + Reconnect
 
-**Intuition**: For each group of K nodes: (1) Find the Kth node, (2) Disconnect the group, (3) Reverse the group, (4) Reconnect to previous group. If less than K nodes remain, don't reverse.
+**Intuition**: For each group: (1) Find Kth node, (2) Disconnect group, (3) Reverse, (4) Reconnect to previous group.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 List: 1 → 2 → 3 → 4 → 5, K = 3
 
-Group 1: [1 → 2 → 3]
+Group 1: [1→2→3]
   getKthNode(1, 3) = node 3
-  Disconnect: 3.next = null → [1 → 2 → 3] [4 → 5]
-  Reverse: [3 → 2 → 1]
-  head = 3 (first group)
-  prevLast = 1 (now the last node of reversed group)
+  Disconnect: 3.next = null
+  Reverse: [3→2→1], head = 3, prevLast = 1
 
-Group 2: [4 → 5]
+Group 2: [4→5]
   getKthNode(4, 3) = null (less than K)
-  Don't reverse, just connect: prevLast.next = 4
+  Don't reverse, connect: prevLast.next = 4
 
 Result: 3 → 2 → 1 → 4 → 5
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
-// Helper: Reverse a linked list
 public ListNode reverseLinkedList(ListNode head) {
-    ListNode temp = head;
-    ListNode prev = null;
+    ListNode temp = head, prev = null;
     while (temp != null) {
         ListNode front = temp.next;
         temp.next = prev;
@@ -855,70 +745,44 @@ public ListNode reverseLinkedList(ListNode head) {
     return prev;
 }
 
-// Helper: Get Kth node from current position
 public ListNode getKthNode(ListNode temp, int k) {
-    k -= 1;  // Already at 1st node
-    while (temp != null && k > 0) {
-        k--;
-        temp = temp.next;
-    }
+    k -= 1;
+    while (temp != null && k > 0) { k--; temp = temp.next; }
     return temp;
 }
 
-// Main function
 public ListNode reverseKGroup(ListNode head, int k) {
-    ListNode temp = head;
-    ListNode prevLast = null;
-
+    ListNode temp = head, prevLast = null;
     while (temp != null) {
-        // Get the Kth node of current group
         ListNode kThNode = getKthNode(temp, k);
-
-        // If less than K nodes, don't reverse
         if (kThNode == null) {
-            if (prevLast != null) {
-                prevLast.next = temp;
-            }
+            if (prevLast != null) prevLast.next = temp;
             break;
         }
-
-        // Save next group start and disconnect
         ListNode nextNode = kThNode.next;
         kThNode.next = null;
-
-        // Reverse the current group
         reverseLinkedList(temp);
-
-        // Update head for first group
-        if (temp == head) {
-            head = kThNode;
-        } else {
-            prevLast.next = kThNode;
-        }
-
-        // Update prevLast (temp is now the LAST node after reversal)
+        if (temp == head) head = kThNode;
+        else prevLast.next = kThNode;
         prevLast = temp;
-
-        // Move to next group
         temp = nextNode;
     }
-
     return head;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(2N) — each node visited twice (once for getKthNode, once for reversal) |
-| **Space** | O(1) — in-place reversal |
+| **Time** | O(2N) — each node visited twice |
+| **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
-- After reversal, `temp` (original group start) becomes the **LAST** node of the reversed group
-- `kThNode` (original group end) becomes the **FIRST** node (new head) of the reversed group
-- **Incomplete groups** (less than K) are left as-is and connected to the previous group
-- This is a **combination** of reversal + traversal + reconnection
+- After reversal: `temp` = LAST node, `kThNode` = FIRST node of reversed group
+- **Incomplete groups** (< K) are left as-is
 
 ---
 
@@ -930,70 +794,56 @@ public ListNode reverseKGroup(ListNode head, int k) {
 
 ### Approach 1: Brute (Stack)
 
-**Intuition**: Push all values onto a stack. Then traverse again and compare each node with the stack top. Stack gives reverse order.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public boolean isPalindrome(ListNode head) {
     Stack<Integer> stack = new Stack<>();
     ListNode temp = head;
-
-    // Push all values onto stack
-    while (temp != null) {
-        stack.push(temp.val);
-        temp = temp.next;
-    }
-
-    // Compare with stack (reverse order)
+    while (temp != null) { stack.push(temp.val); temp = temp.next; }
     temp = head;
     while (temp != null) {
-        if (temp.val != stack.pop()) {
-            return false;
-        }
+        if (temp.val != stack.pop()) return false;
         temp = temp.next;
     }
-
     return true;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(2N) — two traversals |
-| **Space** | O(N) — stack stores all values |
+| **Time** | O(2N) |
+| **Space** | O(N) |
 
 ---
 
 ### Approach 2: Optimal (Find Middle + Reverse + Compare + Restore)
 
-**Intuition**: Find the middle using slow-fast, reverse the second half, compare both halves, then restore the list.
+**Intuition**: Find middle → reverse second half → compare → restore.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 List: 1 → 2 → 3 → 2 → 1
 
-Step 1: Find middle (first middle for even length)
-        slow at node 2, fast at node 3
-
-Step 2: Reverse second half starting from slow.next
-        Second half: 3 → 2 → 1 becomes 1 → 2 → 3
-        newHead = 1
-
-Step 3: Compare first half and reversed second half
-        first: 1 → 2 → 3
-        second: 1 → 2 → 3
-        All match → palindrome!
-
-Step 4: Restore second half (reverse back)
-        1 → 2 → 3 becomes 3 → 2 → 1
-        Reconnect: 2.next = 3
+Step 1: Find middle: slow at 2
+Step 2: Reverse second half: 3→2→1 becomes 1→2→3
+Step 3: Compare: 1→2→3 vs 1→2→3 → match!
+Step 4: Restore: reverse back 1→2→3 to 3→2→1, reconnect
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 private ListNode reverseLinkedList(ListNode head) {
-    ListNode prev = null;
-    ListNode curr = head;
+    ListNode prev = null, curr = head;
     while (curr != null) {
         ListNode nextNode = curr.next;
         curr.next = prev;
@@ -1005,49 +855,36 @@ private ListNode reverseLinkedList(ListNode head) {
 
 public boolean isPalindrome(ListNode head) {
     if (head == null || head.next == null) return true;
-
-    // Step 1: Find first middle using slow-fast
-    ListNode slow = head;
-    ListNode fast = head;
+    ListNode slow = head, fast = head;
     while (fast.next != null && fast.next.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
+        slow = slow.next; fast = fast.next.next;
     }
-
-    // Step 2: Reverse second half
     ListNode newHead = reverseLinkedList(slow.next);
-
-    // Step 3: Compare both halves
-    ListNode first = head;
-    ListNode second = newHead;
+    ListNode first = head, second = newHead;
     while (second != null) {
         if (first.val != second.val) {
-            reverseLinkedList(newHead);  // Restore before returning
-            return false;
+            reverseLinkedList(newHead); return false;
         }
-        first = first.next;
-        second = second.next;
+        first = first.next; second = second.next;
     }
-
-    // Step 4: Restore second half
     reverseLinkedList(newHead);
-
     return true;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(2N) — find mid + reverse + compare + restore = O(N/2 + N/2 + N/2 + N/2) |
-| **Space** | O(1) — only pointers used |
+| **Time** | O(2N) |
+| **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
 - **Always restore the list** after modification — interviewers look for this
-- Use `fast.next != null && fast.next.next != null` to find **first middle** (needed for even-length lists)
-- This problem **combines two patterns**: Slow-Fast Pointer + Reversal
-- The restore step is important — without it, the original list is permanently modified
+- Use `fast.next != null && fast.next.next != null` for **first middle**
+- Combines **Slow-Fast + Reversal** patterns
 
 ---
 
@@ -1059,98 +896,83 @@ public boolean isPalindrome(ListNode head) {
 
 ### Approach 1: Brute (HashMap)
 
-**Intuition**: Traverse the list, storing each node in a HashMap. The first node that's already in the map is the cycle start.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public ListNode findStartingPoint(ListNode head) {
     ListNode temp = head;
     HashMap<ListNode, Integer> map = new HashMap<>();
-
     while (temp != null) {
-        if (map.containsKey(temp)) {
-            return temp;  // Cycle start found
-        }
+        if (map.containsKey(temp)) return temp;
         map.put(temp, 1);
         temp = temp.next;
     }
-
-    return null;  // No cycle
+    return null;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N) — single traversal |
-| **Space** | O(N) — HashMap stores all nodes |
+| **Time** | O(N) |
+| **Space** | O(N) |
 
 ---
 
 ### Approach 2: Optimal (Tortoise & Hare + Reset)
 
-**Intuition**: 
-1. Detect cycle using slow-fast pointers
-2. When they meet, reset slow to head
-3. Move both by 1 step — they meet at the cycle start
+**Intuition**: (1) Detect cycle, (2) Reset slow to head, (3) Move both by 1 — they meet at cycle start.
 
-**Mathematical Proof**:
+<details>
+<summary>📐 Mathematical Proof (Click to expand)</summary>
+
 ```
-L = distance from head to cycle start
-K = distance from cycle start to meeting point
-C = cycle length
+L = head to cycle start, K = cycle start to meeting point, C = cycle length
 
-When they meet:
-  slow traveled: L + K
-  fast traveled: L + K + m*C (m loops)
+slow = L + K, fast = L + K + m*C
+Since fast = 2*slow: 2(L+K) = L+K+m*C → L+K = m*C → L = m*C - K
 
-  Since fast = 2 * slow:
-  2(L + K) = L + K + m*C
-  L + K = m*C
-  L = m*C - K
-
-  This means: from meeting point, moving L steps reaches cycle start
-  And from head, moving L steps also reaches cycle start
-  So reset one pointer to head, move both by 1 → they meet at cycle start!
+From meeting point, moving L steps = cycle start
+From head, moving L steps = cycle start
+→ Reset one to head, move both by 1 → meet at cycle start!
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode findStartingPoint(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
-
-    // Phase 1: Detect the loop
+    ListNode slow = head, fast = head;
     while (fast != null && fast.next != null) {
         slow = slow.next;
         fast = fast.next.next;
-
         if (slow == fast) {
-            // Phase 2: Find the starting point
             slow = head;
-            while (slow != fast) {
-                slow = slow.next;
-                fast = fast.next;
-            }
-            return slow;  // Cycle start
+            while (slow != fast) { slow = slow.next; fast = fast.next; }
+            return slow;
         }
     }
-
-    return null;  // No cycle
+    return null;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N) — detect cycle + find start |
-| **Space** | O(1) — only two pointers |
+| **Time** | O(N) |
+| **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
-- This is an **extension of Q8** (Detect Loop) — first detect, then find start
-- The math proof `L = m*C - K` is crucial for interviews
-- After detection, **both pointers move by 1 step** (not 1 and 2)
-- If asked "detect cycle" → just Phase 1. If "find start" → Phase 1 + Phase 2
+- Extension of Q8 — first detect, then find start
+- Math proof `L = m*C - K` is crucial for interviews
+- After detection, **both pointers move by 1 step**
 
 ---
 
@@ -1158,13 +980,13 @@ public ListNode findStartingPoint(ListNode head) {
 
 **🔗 Pattern**: [Merge / Two-List](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-3-merge--two-list-traversal) + [Dummy Node](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-4-dummy-node-technique)
 
-**Problem**: Given a linked list where each node has a `next` pointer (to the next node on the same level) and a `child` pointer (to a sublist), flatten the list such that all nodes appear in a single level sorted list.
+**Problem**: Given a linked list where each node has `next` and `child` pointers, flatten it into a single level sorted list.
 
 ### Approach 1: Brute (Array + Sort + Rebuild)
 
-**Intuition**: Extract all values into an array, sort, then rebuild a flat linked list using child pointers.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 private ListNode convertArrToLinkedList(List<Integer> arr) {
     ListNode dummyNode = new ListNode(-1);
@@ -1178,101 +1000,68 @@ private ListNode convertArrToLinkedList(List<Integer> arr) {
 
 public ListNode flattenLinkedList(ListNode head) {
     List<Integer> arr = new ArrayList<>();
-
     while (head != null) {
         ListNode t2 = head;
-        while (t2 != null) {
-            arr.add(t2.val);
-            t2 = t2.child;
-        }
+        while (t2 != null) { arr.add(t2.val); t2 = t2.child; }
         head = head.next;
     }
-
     Collections.sort(arr);
     return convertArrToLinkedList(arr);
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N×M) + O(N×M log(N×M)) + O(N×M) — traverse + sort + rebuild |
-| **Space** | O(N×M) + O(N×M) — array + new list |
+| **Time** | O(N×M) + O(N×M log(N×M)) + O(N×M) |
+| **Space** | O(N×M) + O(N×M) |
 
 ---
 
 ### Approach 2: Optimal (Recursive Merge)
 
-**Intuition**: Recursively flatten the rest of the list first, then merge the current vertical list with the already-flattened result. This uses the same merge pattern as Q3.
+**Intuition**: Recursively flatten the rest, then merge current vertical list with flattened result.
 
-**Dry Run**:
-```
-5 → 10 → 19 → 28
-|    |    |    |
-7    19   22   35
-|    |    |    |
-8    20   25   40
-|          |    |
-30         50   45
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-Step 1: Recursively flatten 10 → 19 → 28
-  Step 2: Recursively flatten 19 → 28
-    Step 3: Recursively flatten 28 → returns 28 → 35 → 40 → 45
-  Merge 19 → 22 → 25 → 50 with 28 → 35 → 40 → 45
-  = 19 → 22 → 25 → 28 → 35 → 40 → 45 → 50
-Merge 5 → 7 → 8 → 30 with 19 → 22 → 25 → 28 → 35 → 40 → 45 → 50
-= 5 → 7 → 8 → 19 → 22 → 25 → 28 → 30 → 35 → 40 → 45 → 50
-```
-
-**Code**:
 ```java
 private ListNode merge(ListNode list1, ListNode list2) {
     ListNode dummyNode = new ListNode(-1);
     ListNode res = dummyNode;
-
     while (list1 != null && list2 != null) {
-        if (list1.val < list2.val) {
-            res.child = list1;
-            res = list1;
-            list1 = list1.child;
-        } else {
-            res.child = list2;
-            res = list2;
-            list2 = list2.child;
-        }
-        res.next = null;  // Disconnect next pointer
+        if (list1.val < list2.val) { res.child = list1; res = list1; list1 = list1.child; }
+        else { res.child = list2; res = list2; list2 = list2.child; }
+        res.next = null;
     }
-
     if (list1 != null) res.child = list1;
     else res.child = list2;
-
     if (dummyNode.child != null) dummyNode.child.next = null;
     return dummyNode.child;
 }
 
 public ListNode flattenLinkedList(ListNode head) {
     if (head == null || head.next == null) return head;
-
-    // Recursively flatten the rest
     ListNode mergedHead = flattenLinkedList(head.next);
-
-    // Merge current vertical list with flattened rest
     head = merge(head, mergedHead);
     return head;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(M × N²) — merge sizes: M, 2M, 3M, ..., NM → sum = M×N² |
+| **Time** | O(M × N²) |
 | **Space** | O(N) — recursive call stack |
 
 ---
 
 ### ⚡ Key Takeaways
-- Uses `child` pointers instead of `next` for vertical traversal
-- **Always set `res.next = null`** after merge to prevent cycles from the original structure
-- The merge is identical to Q3 but uses `child` instead of `next`
-- **Time complexity is O(M×N²)** because each merge increases the list size
+- Uses `child` pointers instead of `next`
+- Always set `res.next = null` after merge to prevent cycles
+- Time complexity O(M×N²) because each merge increases list size
 
 ---
 
@@ -1284,22 +1073,17 @@ public ListNode flattenLinkedList(ListNode head) {
 
 ### Approach 1: Brute (Rotate One Step, K Times)
 
-**Intuition**: For each rotation, find the last node, move it to the front. Repeat K times.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public ListNode rotateRight(ListNode head, int k) {
     if (head == null || head.next == null) return head;
-
     for (int i = 0; i < k; i++) {
         ListNode temp = head;
-        // Find second last node
         while (temp.next.next != null) temp = temp.next;
-        // Get last node
         ListNode end = temp.next;
-        // Break link
         temp.next = null;
-        // Move last to front
         end.next = head;
         head = end;
     }
@@ -1307,77 +1091,67 @@ public ListNode rotateRight(ListNode head, int k) {
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N × K) — K rotations, each O(N) |
+| **Time** | O(N × K) |
 | **Space** | O(1) |
 
 ---
 
 ### Approach 2: Optimal (Make Circular + Break)
 
-**Intuition**: Calculate length, make the list circular, find the new tail position (length - K), break the link there.
+**Intuition**: Calculate length, make list circular, find new tail at (length - K), break there.
 
-**Dry Run**:
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
+
 ```
 List: 1 → 2 → 3 → 4 → 5, K = 2
 
 Step 1: length = 5, tail = node 5
 Step 2: Make circular: 5.next = 1
 Step 3: K = 2 % 5 = 2
-Step 4: New tail at position (5 - 2) = 3 from head
-        Move temp (at tail=5) 3 steps: temp = 3
-Step 5: New head = temp.next = 4
-        Break: temp.next = null
-
+Step 4: Move temp 3 steps from tail: temp = node 3
+Step 5: New head = temp.next = 4, Break: temp.next = null
 Result: 4 → 5 → 1 → 2 → 3
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
 public ListNode rotateRight(ListNode head, int k) {
     if (head == null || head.next == null || k == 0) return head;
-
-    // Calculate length and find tail
     ListNode temp = head;
     int length = 1;
-    while (temp.next != null) {
-        length++;
-        temp = temp.next;
-    }
-    // temp is now at tail
-
-    // Make circular
-    temp.next = head;
-
-    // Handle K > length
-    k = k % length;
-
-    // Find new tail: move (length - k) steps from head
-    // Since temp is at tail (connected to head), move (length - k) more steps
+    while (temp.next != null) { length++; temp = temp.next; }
+    temp.next = head;          // Make circular
+    k = k % length;            // Handle K > length
     int end = length - k;
     while (end-- > 0) temp = temp.next;
-
-    // New head and break circular link
-    head = temp.next;
-    temp.next = null;
-
+    head = temp.next;          // New head
+    temp.next = null;          // Break circular link
     return head;
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(N) — calculate length + find break point |
+| **Time** | O(N) |
 | **Space** | O(1) |
 
 ---
 
 ### ⚡ Key Takeaways
-- **Always do `k = k % length`** — rotating by length returns the same list
-- The trick is making the list **temporarily circular**, then breaking at the right point
-- New tail is at position `(length - k)` from head
-- The temp pointer starts at tail (after length calculation), so it needs `(length - k)` more steps
+- Always `k = k % length` — rotating by length returns same list
+- Temporarily make circular, then break at right point
+- New tail at position `(length - k)` from head
 
 ---
 
@@ -1385,27 +1159,19 @@ public ListNode rotateRight(ListNode head, int k) {
 
 **🔗 Pattern**: [In-Place Modification](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-6-in-place-modification--o1-deletion) | [Hashing (Brute)](Striver_SDE_Sheet_LinkedList_Series_part-1.md#pattern-5-hashing--node-tracking)
 
-**Problem**: Given a linked list where each node has a `next` pointer and a `random` pointer, create a deep copy of the list.
+**Problem**: Given a linked list where each node has `next` and `random` pointers, create a deep copy.
 
 ### Approach 1: Brute (HashMap)
 
-**Intuition**: Two passes — first pass creates copies and maps original→copy, second pass sets next and random pointers using the map.
+<details>
+<summary>💻 Code (Click to expand)</summary>
 
-**Code**:
 ```java
 public ListNode copyRandomList(ListNode head) {
     if (head == null) return null;
-
     HashMap<ListNode, ListNode> map = new HashMap<>();
     ListNode temp = head;
-
-    // Pass 1: Create copies
-    while (temp != null) {
-        map.put(temp, new ListNode(temp.val));
-        temp = temp.next;
-    }
-
-    // Pass 2: Set next and random pointers
+    while (temp != null) { map.put(temp, new ListNode(temp.val)); temp = temp.next; }
     temp = head;
     while (temp != null) {
         ListNode copyNode = map.get(temp);
@@ -1413,43 +1179,40 @@ public ListNode copyRandomList(ListNode head) {
         copyNode.random = map.get(temp.random);
         temp = temp.next;
     }
-
     return map.get(head);
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(2N) — two passes |
+| **Time** | O(2N) |
 | **Space** | O(N) + O(N) — HashMap + copied list |
 
 ---
 
 ### Approach 2: Optimal (Interleave Copies In-Place)
 
-**Intuition**: Three steps — (1) Insert copy nodes between originals, (2) Set random pointers using the interleaved structure, (3) Separate copies from originals.
+**Intuition**: (1) Insert copies between originals, (2) Set random pointers, (3) Separate copies from originals. Key: `copy.random = original.random.next`.
 
-**Why `copy.random = original.random.next` works**: Since copies are right next to originals, the copy of `original.random` is `original.random.next`.
+<details>
+<summary>🔍 Dry Run (Click to expand)</summary>
 
-**Dry Run**:
 ```
 Original: 1 → 2 → 3 (with random pointers)
 
-Step 1: Insert copies between originals
-1 → 1' → 2 → 2' → 3 → 3'
-
-Step 2: Set random pointers
-If 1.random = 3, then 1'.random = 1.random.next = 3.next = 3'
-If 2.random = 1, then 2'.random = 2.random.next = 1.next = 1'
-
-Step 3: Separate
-Original: 1 → 2 → 3
-Copy:     1' → 2' → 3'
+Step 1: Insert copies: 1 → 1' → 2 → 2' → 3 → 3'
+Step 2: Set random: 1'.random = 1.random.next
+Step 3: Separate: Original: 1→2→3, Copy: 1'→2'→3'
 ```
 
-**Code**:
+</details>
+
+<details>
+<summary>💻 Code (Click to expand)</summary>
+
 ```java
-// Step 1: Insert copy nodes between originals
 void insertCopyInBetween(ListNode head) {
     ListNode temp = head;
     while (temp != null) {
@@ -1461,59 +1224,51 @@ void insertCopyInBetween(ListNode head) {
     }
 }
 
-// Step 2: Connect random pointers
 void connectRandomPointers(ListNode head) {
     ListNode temp = head;
     while (temp != null) {
         ListNode copyNode = temp.next;
-        if (temp.random != null) {
-            copyNode.random = temp.random.next;
-        } else {
-            copyNode.random = null;
-        }
+        if (temp.random != null) copyNode.random = temp.random.next;
+        else copyNode.random = null;
         temp = temp.next.next;
     }
 }
 
-// Step 3: Separate copies from originals
 ListNode getDeepCopyList(ListNode head) {
     ListNode temp = head;
     ListNode dummyNode = new ListNode(-1);
     ListNode res = dummyNode;
-
     while (temp != null) {
-        res.next = temp.next;       // Attach copy
+        res.next = temp.next;
         res = res.next;
-        temp.next = temp.next.next;  // Restore original
+        temp.next = temp.next.next;
         temp = temp.next;
     }
-
     return dummyNode.next;
 }
 
-// Main function
 ListNode copyRandomList(ListNode head) {
     if (head == null) return null;
-
     insertCopyInBetween(head);
     connectRandomPointers(head);
     return getDeepCopyList(head);
 }
 ```
 
+</details>
+
 | | Complexity |
 |---|---|
-| **Time** | O(3N) — three passes (insert + connect + separate) |
-| **Space** | O(N) — only the copied list (no extra data structures) |
+| **Time** | O(3N) — three passes |
+| **Space** | O(N) — only the copied list |
 
 ---
 
 ### ⚡ Key Takeaways
-- **HashMap approach** is simpler to understand and code — good for quick implementation
-- **In-place approach** is the optimal solution — no extra data structure needed
-- The key insight: `copy.random = original.random.next` works because copies are interleaved
-- **Three distinct steps** must be done in order: insert → connect random → separate
-- The separation step also **restores the original list**
+- HashMap approach is simpler; In-place is optimal
+- `copy.random = original.random.next` works because copies are interleaved
+- Three steps in order: insert → connect random → separate
+- Separation also restores the original list
 
 ---
 
@@ -1522,13 +1277,13 @@ ListNode copyRandomList(ListNode head) {
 | # | Problem | Best Approach | Time | Space | Key Pattern |
 |---|---------|---------------|------|-------|-------------|
 | 1 | Reverse LL | Iterative 3-pointer | O(N) | O(1) | Reversal |
-| 2 | Middle of LL | Slow-Fast (Tortoise & Hare) | O(N/2) | O(1) | Slow-Fast |
+| 2 | Middle of LL | Slow-Fast | O(N/2) | O(1) | Slow-Fast |
 | 3 | Merge Sorted Lists | Two-pointer + Dummy | O(N1+N2) | O(1) | Merge + Dummy |
 | 4 | Remove Nth from End | Fast-Slow gap of N | O(N) | O(1) | Two-Pointer Alignment |
 | 5 | Add Two Numbers | Digit-wise + Carry + Dummy | O(max(M,N)) | O(max(M,N)) | Dummy Node |
 | 6 | Delete Node O(1) | Value copy + Skip | O(1) | O(1) | In-Place |
 | 7 | Intersection Y LL | Switch heads | O(N+M) | O(1) | Two-Pointer Intersection |
-| 8 | Detect Loop | Slow-Fast (Tortoise & Hare) | O(N) | O(1) | Slow-Fast |
+| 8 | Detect Loop | Slow-Fast | O(N) | O(1) | Slow-Fast |
 | 9 | Reverse K Group | Reverse groups + Reconnect | O(2N) | O(1) | Reversal |
 | 10 | Palindrome | Mid + Reverse + Compare + Restore | O(2N) | O(1) | Slow-Fast + Reversal |
 | 11 | Loop Start | Detect + Reset to head | O(N) | O(1) | Slow-Fast |
