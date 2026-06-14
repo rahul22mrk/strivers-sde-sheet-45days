@@ -377,10 +377,3 @@ Complexity Analysis
 Time Complexity: O(N), as there is single traversal of the array .Here N is the number of elements in the array.
 Space Complexity: O(1), as no additional space is used .
 
-ye 4 aur add karo ...
-
-fir ese likho Pattern Name:
-uske niche question with their index also usme trick kare to ques me pahuch jaye 
-
-jo pattern ayaya usko kaise pahchane 
-uska universal template ye bhi mention kara
