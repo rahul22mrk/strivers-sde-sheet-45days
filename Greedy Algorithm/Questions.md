@@ -5,6 +5,10 @@
 5. `Minimum coins`
 6. `Assign Cookies`
 
+   
+****************************************************************************************
+
+
 1. `N meetings in one room`
 ```java
 // Comparator function to sort meetings based on end times
