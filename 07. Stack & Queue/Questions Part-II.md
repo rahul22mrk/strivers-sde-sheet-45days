@@ -22,179 +22,1568 @@
 8. `Next Smaller Element `
 ```java
 //Brute:
+import java.util.*;
 
-```
+// Class to solve Next Smaller Element problem
+class Solution {
+    // Function to find Next Smaller Element for each element in array
+    public int[] nextSmallerElements(int[] arr) {
+        // Get the length of input array
+        int n = arr.length;
+        // Initialize result array with -1
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
 
-```java
-//Better:
+        // Traverse each element
+        for (int i = 0; i < n; i++) {
+            // Check all elements to the right
+            for (int j = i + 1; j < n; j++) {
+                // If smaller element found
+                if (arr[j] < arr[i]) {
+                    // Record it as NSE
+                    result[i] = arr[j];
+                    // Stop further checking
+                    break;
+                }
+            }
+        }
 
+        // Return the result array
+        return result;
+    }
+}
 
+class Main {
+    public static void main(String[] args) {
+        // Example input
+        int[] arr = {4, 5, 2, 10, 8};
+        // Create Solution object
+        Solution obj = new Solution();
+        // Call function to get NSEs
+        int[] ans = obj.nextSmallerElements(arr);
+        // Print result
+        for (int x : ans) System.out.print(x + " ");
+        System.out.println();
+    }
+}
+Time and Space Complexity
+Time Complexity: O(n²), where n is the number of elements in the array. For each element, we may need to check all elements to its right to find the next smaller element.
+Space Complexity: O(n), as we use a result array of size n to store the next smaller element for each input element.
 ```
 
 ```java
 //Optimal:
 
+import java.util.*;
 
+// Class to solve Next Smaller Element problem
+class Solution {
+    // Function to find Next Smaller Element for each element using stack
+    public int[] nextSmallerElements(int[] arr) {
+        // Get length of input array
+        int n = arr.length;
+        // Initialize result array with -1
+        int[] result = new int[n];
+        Arrays.fill(result, -1);
+        // Stack to keep potential next smaller elements
+        Stack<Integer> st = new Stack<>();
+
+        // Traverse the array from right to left
+        for (int i = n - 1; i >= 0; i--) {
+            // Pop elements from stack that are greater or equal
+            while (!st.isEmpty() && st.peek() >= arr[i]) st.pop();
+            // If stack is not empty, top is the next smaller element
+            if (!st.isEmpty()) result[i] = st.peek();
+            // Push current element onto stack
+            st.push(arr[i]);
+        }
+
+        // Return result array
+        return result;
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        // Example input
+        int[] arr = {4, 5, 2, 10, 8};
+        // Create Solution object
+        Solution obj = new Solution();
+        // Get next smaller elements
+        int[] ans = obj.nextSmallerElements(arr);
+        // Print result
+        for (int x : ans) System.out.print(x + " ");
+        System.out.println();
+    }
+}
+Time and Space Complexity
+Time Complexity: O(n), where n is the number of elements in the array. Each element is pushed and popped from the stack at most once.
+Space Complexity: O(n), as we use a stack to keep potential next smaller elements and a result array of size n.
 ```
 
 9. `LRU Cache `
 ```java
-//Brute:
+import java.util.*;
 
-```
+class Node {
+    public int key, val;
+    public Node next, prev;
+    
+    // Constructors
+    Node() {
+        key = val = -1;
+        next = prev = null;
+    }
 
-```java
-//Better:
+    Node(int k, int value) {
+        key = k;
+        val = value;
+        next = prev = null;
+    }
+}
 
+// Class implementing LRU cache
+class LRUCache {
+    private Map<Integer, Node> mpp; // Map data structure
+    private int cap; // Capacity
+    private Node head; // Dummy head pointer
+    private Node tail; // Dummy tail pointer
 
-```
+    /* Private method to delete node
+    from doubly linked list */
+    private void deleteNode(Node node) {
 
-```java
-//Optimal:
+        // Get the previous and next pointers
+        Node prevNode = node.prev;
+        Node nextNode = node.next;
 
+        // Remove pointers to node
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+    }
 
+    // Private method to insert node after head
+    private void insertAfterHead(Node node) {
+
+        Node nextNode = head.next;
+        head.next = node;
+        nextNode.prev = node;
+        node.prev = head;
+        node.next = nextNode;
+    }
+
+    // Method to initialise cache with given capacity
+    public LRUCache(int capacity) {
+        cap = capacity; // Set the capacity
+        mpp = new HashMap<>(); // Clear the cache
+
+        head = new Node();
+        tail = new Node();
+
+        // Make the connections
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    // Method to get the key from cache
+    public int get(int key_) {
+        // Return -1 if it is not present in cache
+        if (!mpp.containsKey(key_))
+            return -1;
+
+        Node node = mpp.get(key_); // Get the node
+        int val = node.val; // Get the value
+
+        // Delete the node
+        deleteNode(node);
+        /* Insert this node to front
+        as it was recently used */
+        insertAfterHead(node);
+
+        // Return the stored value
+        return val;
+    }
+
+    /* Method to update value if key exists,
+    otherwise insert the key-value pair */
+    public void put(int key_, int value) {
+
+        // Update the value if key is already present
+        if (mpp.containsKey(key_)) {
+            
+            Node node = mpp.get(key_); // Get the node
+            node.val = value; // Update the value
+            
+            // Delete the node
+            deleteNode(node);
+            
+            /* Insert this node to front
+            as it was recently used */
+            insertAfterHead(node);
+            
+            return;
+        }
+
+        // Check if the capacity limit has reached
+        if (mpp.size() == cap) {
+
+            // Get the least recently used node
+            Node node = tail.prev;
+
+            // Delete node from map
+            mpp.remove(node.key);
+
+            // Delete node from doubly linked list
+            deleteNode(node);
+        }
+
+        // Create a new node
+        Node newNode = new Node(key_, value);
+        
+        // Insert it in map
+        mpp.put(key_, newNode);
+
+        // Insert in doubly linked list
+        insertAfterHead(newNode);
+    }
+
+    public static void main(String[] args) {
+        // LRU Cache
+        LRUCache cache = new LRUCache(2);
+
+        // Queries
+        cache.put(1, 1);
+        cache.put(2, 2);
+        System.out.print(cache.get(1) + " ");
+        cache.put(3, 3);
+        System.out.print(cache.get(2) + " ");
+        cache.put(4, 4);
+        System.out.print(cache.get(1) + " ");
+        System.out.print(cache.get(3) + " ");
+        System.out.print(cache.get(4) + " ");
+    }
+}
+Complexity Analysis:
+Time Complexity: O(N) (where N is the number of queries)
+Since the Put and Get method takes an average of constant time, the overall complexity to process all the queries is O(N) time.
+
+Space Complexity: O(cap) (where cap is the capacity of the LRU cache)
+Since the doubly linked list can store at most of the capacity number of key-value pairs, this takes O(cap) space.
 ```
 
 10. `LFU Cache `
 ```java
-//Brute:
+import java.util.HashMap;
+import java.util.Map;
 
-```
+/* To implement a node in doubly linked 
+list that will store data items */
+class Node {
+   int key, value, cnt;
+   Node next;
+   Node prev;
+   Node(int _key, int _value) {
+       key = _key;
+       value = _value;
+       cnt = 1;
+   }
+}
 
-```java
-//Better:
+// To implement the doubly linked list
+class List {
+   int size; // Size 
+   Node head; // Dummy head
+   Node tail; // Dummy tail
+   
+   // Constructor
+   List() {
+       head = new Node(0, 0);
+       tail = new Node(0, 0);
+       head.next = tail;
+       tail.prev = head;
+       size = 0;
+   }
+   
+   // Function to add node in front 
+   void addFront(Node node) {
+       Node temp = head.next;
+       node.next = temp;
+       node.prev = head;
+       head.next = node;
+       temp.prev = node;
+       size++;
+   }
+   
+   // Function to remove node from the list
+   void removeNode(Node delnode) {
+       Node prevNode = delnode.prev;
+       Node nextNode = delnode.next;
+       prevNode.next = nextNode;
+       nextNode.prev = prevNode;
+       size--;
+   }
+}
+
+// Class to implement LFU cache
+class LFUCache {
+   // Hashmap to store the key-nodes pairs
+   private Map<Integer, Node> keyNode;
+   
+   /* Hashmap to maintain the lists 
+   having different frequencies */
+   private Map<Integer, List> freqListMap;
+   
+   private int maxSizeCache; // Max size of cache
+   
+   /* To store the frequency of least 
+   frequently used data-item */
+   private int minFreq;
+   
+   // To store current size of cache
+   private int curSize;
+   
+   // Constructor
+   public LFUCache(int capacity) {
+       // Set the capacity
+       maxSizeCache = capacity;
+       minFreq = 0; // Set minimum frequency
+       curSize = 0; // Set current frequency
+       keyNode = new HashMap<>();
+       freqListMap = new HashMap<>();
+   }
+   
+   // Method to update frequency of data-items
+   private void updateFreqListMap(Node node) {
+       // Remove from Hashmap
+       keyNode.remove(node.key);
+       
+       // Update the frequency list hashmap
+       freqListMap.get(node.cnt).removeNode(node);
+       
+       // If node was the last node having its frequency
+       if (node.cnt == minFreq && 
+           freqListMap.get(node.cnt).size == 0) {
+           // Update the minimum frequency
+           minFreq++;
+       }
+       
+       // Creating a dummy list for next higher frequency
+       List nextHigherFreqList = new List();
+       
+       // If the next higher frequency list already exists
+       if (freqListMap.containsKey(node.cnt + 1)) {
+           // Update pointer to already existing list
+           nextHigherFreqList = 
+               freqListMap.get(node.cnt + 1);
+       }
+       
+       // Increment the count of data-item
+       node.cnt += 1;
+       
+       // Add the node in front of higher frequency list
+       nextHigherFreqList.addFront(node);
+       
+       // Update the frequency list map
+       freqListMap.put(node.cnt, nextHigherFreqList);
+       keyNode.put(node.key, node);
+   }
+   
+   // Method to get the value of key from LFU cache
+   public int get(int key) {
+       // Return the value if key exists
+       if (keyNode.containsKey(key)) {
+           Node node = keyNode.get(key); // Get the node
+           int val = node.value; // Get the value
+           updateFreqListMap(node); // Update the frequency
+           // Return the value
+           return val;
+       }
+       // Return -1 if key is not found
+       return -1;
+   }
+   
+   public void put(int key, int value) {
+       /* If the size of Cache is 0, 
+       no data-items can be inserted */
+       if (maxSizeCache == 0) {
+           return;
+       }
+       
+       // If key already exists
+       if (keyNode.containsKey(key)) {
+           // Get the node
+           Node node = keyNode.get(key);
+           // Update the value
+           node.value = value;
+           // Update the frequency
+           updateFreqListMap(node);
+       } else {
+           // If cache limit is reached
+           if (curSize == maxSizeCache) {
+               // Remove the least frequently used data-item
+               List list = freqListMap.get(minFreq);
+               keyNode.remove(list.tail.prev.key);
+               
+               // Update the frequency map
+               freqListMap.get(minFreq).removeNode(list.tail.prev);
+               // Decrement the current size of cache
+               curSize--;
+           }
+           // Increment the current cache size
+           curSize++;
+           
+           // Adding new value to the cache
+           minFreq = 1; // Set its frequency to 1
+           
+           // Create a dummy list
+           List listFreq = new List();
+           
+           // If the list already exists
+           if (freqListMap.containsKey(minFreq)) {
+               // Update the pointer to already present list
+               listFreq = freqListMap.get(minFreq);
+           }
+           
+           // Create the node to store data-item
+           Node node = new Node(key, value);
+           
+           // Add the node to dummy list
+           listFreq.addFront(node);
+           
+           // Add the node to Hashmap
+           keyNode.put(key, node);
+           
+           // Update the frequency list map
+           freqListMap.put(minFreq, listFreq);
+       }
+   }
+   
+   public static void main(String[] args) {
+       // LFU Cache
+       LFUCache cache = new LFUCache(2);
+       
+       // Queries
+       cache.put(1, 1);
+       cache.put(2, 2);
+       System.out.print(cache.get(1) + " ");
+       cache.put(3, 3);
+       System.out.print(cache.get(2) + " ");
+       System.out.print(cache.get(3) + " ");
+       cache.put(4, 4);
+       System.out.print(cache.get(1) + " ");
+       System.out.print(cache.get(3) + " ");
+       System.out.print(cache.get(4) + " ");
+   }
+}
 
 
-```
+Complexity Analysis:
+Time Complexity: O(N) (where N is the number of queries on the LFU cache)
+Each get and put method takes an average of constant time making the overall complexity as O(N).
 
-```java
-//Optimal:
-
+Space Complexity: O(cap) (where cap is the capacity of LFU cache defined)
+At maximum the cache can store the numbers of data-items equal to its capacity taking O(cap) space.
 
 ```
 
 11. `Largest rectangle in a histogram `
 ```java
 //Brute:
+import java.util.*;
 
-```
+class Solution {
+    /* Function to find the indices of 
+    next smaller elements */
+    private int[] findNSE(int[] arr) {
+        
+        // Size of array
+        int n = arr.length;
+        
+        // To store the answer
+        int[] ans = new int[n];
+        
+        // Stack 
+        Stack<Integer> st = new Stack<>();
+        
+        // Start traversing from the back
+        for(int i = n - 1; i >= 0; i--) {
+            
+            // Get the current element
+            int currEle = arr[i];
+            
+            /* Pop the elements in the stack until 
+            the stack is not empty and the top 
+            element is not the smaller element */
+            while(!st.isEmpty() && 
+                  arr[st.peek()] >= arr[i]){
+                st.pop();
+            }
+            
+            // Update the answer
+            ans[i] = !st.isEmpty() ? st.peek() : n;
+            
+            /* Push the index of current 
+            element in the stack */
+            st.push(i);
+        }
+        
+        // Return the answer
+        return ans;
+    }
+    
+    /* Function to find the indices of 
+    previous smaller elements */
+    private int[] findPSE(int[] arr) {
+        
+        // Size of array
+        int n = arr.length;
+        
+        // To store the answer
+        int[] ans = new int[n];
+        
+        // Stack 
+        Stack<Integer> st = new Stack<>();
+        
+        // Traverse on the array
+        for(int i=0; i < n; i++) {
+            
+            // Get the current element
+            int currEle = arr[i];
+            
+            /* Pop the elements in the stack until 
+            the stack is not empty and the top 
+            elements is not the smaller element */
+            while(!st.isEmpty() && 
+                  arr[st.peek()] >= arr[i]){
 
-```java
-//Better:
+                st.pop();
+            }
+            
+            // Update the answer
+            ans[i] = !st.isEmpty() ? st.peek() : -1;
+            
+            /* Push the index of current 
+            element in the stack */
+            st.push(i);
+        }
+        
+        // Return the answer
+        return ans;
+    }
+    
+    // Function to find the largest rectangle area
+    public int largestRectangleArea(int[] heights) {
+        
+        /* Determine the next and 
+        previous smaller elements */
+        int[] nse = findNSE(heights);
+        int[] pse = findPSE(heights);
+        
+        // To store largest area
+        int largestArea = 0;
+        
+        // To store current area
+        int area;
+        
+        // Traverse on the array
+        for(int i=0; i < heights.length; i++) {
+            
+            // Calculate current area
+            area = heights[i] * (nse[i]-pse[i]-1);
+            
+            // Update largest area
+            largestArea = Math.max(largestArea, area);
+        }
+        
+        // Return largest area found
+        return largestArea;
+    }
+    
+    public static void main(String[] args) {
+        int[] heights = {2, 1, 5, 6, 2, 3};
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        // Function call to find the largest rectangle area
+        int ans = sol.largestRectangleArea(heights);
+        
+        System.out.println("The largest rectangle area is: " + ans);
+    }
+}
+Complexity Analysis:
+Time Complexity: O(N) (where N is the size of the given array)
 
+Precomputing PSE and NSE arrays take O(2N) time each.
+Traversing the given histogram once to find the maximum area takes O(N) time.
+Space Complexity: O(N)
 
+Finding the PSE and NSE arrays uses stack that takes O(N) space each.
+Storing the PSE and NSE arrays take O(N) space each.
 ```
 
 ```java
 //Optimal:
+import java.util.*;
 
+class Solution {
+    // Function to find the largest rectangle area
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length; // Size of array
+        
+        // Stack 
+        Stack<Integer> st = new Stack<>();
+        
+        // To store largest area
+        int largestArea = 0;
+        
+        // To store current area
+        int area;
+        
+        /* To store the indices of next 
+        and previous smaller elements */
+        int nse, pse;
+        
+        // Traverse on the array
+        for(int i = 0; i < n; i++) {
+            
+            /* Pop the elements in the stack until 
+            the stack is not empty and the top 
+            elements is not the smaller element */
+            while(!st.isEmpty() && 
+                  heights[st.peek()] >= heights[i]) {
+                
+                // Get the index of top of stack
+                int ind = st.pop();
+                
+                /* Update the index of 
+                previous smaller element */
+                pse = st.isEmpty() ? -1 : st.peek();
+                
+                /* Next smaller element index for 
+                the popped element is current index */
+                nse = i;
+                
+                // Calculate the area of the popped element
+                area = heights[ind] * (nse - pse - 1);
+                
+                // Update the maximum area
+                largestArea = Math.max(largestArea, area);
+            }
+            
+            // Push the current index in stack
+            st.push(i);
+        }
+        
+        // For elements that are not popped from stack
+        while(!st.isEmpty()) {
+            
+            // NSE for such elements is size of array
+            nse = n;
+            
+            // Get the index of top of stack
+            int ind = st.pop();
+            
+            // Update the previous smaller element
+            pse = st.isEmpty() ? -1 : st.peek();
+            
+            // Calculate the area of the popped element
+            area = heights[ind] * (nse - pse - 1);
+            
+            // Update the maximum area
+            largestArea = Math.max(largestArea, area);
+        }
+        
+        // Return largest area found
+        return largestArea;
+    }
+    
+    public static void main(String[] args) {
+        int[] heights = {2, 1, 5, 6, 2, 3};
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution();
+        
+        // Function call to find the largest rectangle area
+        int ans = sol.largestRectangleArea(heights);
+        
+        System.out.println("The largest rectangle area is: " + ans);
+    }
+}
 
+Complexity Analysis:
+Time Complexity: O(N) (where N is the size of the given array)
+
+Traversing all the elements of array takes O(N) time.
+All the elements are pushed in and popped out from the stack once taking O(N) time.
+Space Complexity: O(N)
+The stack space used to find the previous smaller element during traversal can go up to O(N).
 ```
 
 12. `Sliding Window Maximum `
 ```java
 //Brute:
+import java.util.*;
 
-```
+class Solution {
+    // Function to get the maximum sliding window
+    public List<Integer> maxSlidingWindow(int[] arr, int k) {
+        
+        int n = arr.length; // Size of array
+        
+        // To store the answer
+        List<Integer> ans = new ArrayList<>();
+        
+        /* Traverse on the arrary 
+        for valid window */
+        for(int i = 0; i <= n - k; i++) {
+            
+            // To store the maximum of the window
+            int maxi = arr[i];
+            
+            // Traverse the window
+            for(int j = i; j < i + k; j++) {
+                // Update the maximum
+                maxi = Math.max(maxi, arr[j]);
+            }
+            
+            // Add the maximum to the result
+            ans.add(maxi);
+        }
+        
+        // Return the stored result
+        return ans;
+    }
 
-```java
-//Better:
+    public static void main(String[] args) {
+        int[] arr = {4, 0, -1, 3, 5, 3, 6, 8};
+        int k = 3;
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution();
+        
+        /* Function call to get the
+        maximum sliding window */
+        List<Integer> ans = sol.maxSlidingWindow(arr, k);
+        
+        System.out.println("The maximum elements in the sliding window are: ");
+        for(int num : ans) {
+            System.out.print(num + " ");
+        }
+    }
+}
+Complexity Analysis:
+Time Complexity: O((N-K)*K) (where N is the size of given array)
+Using two nested loops.
 
-
+Space Complexity: O(N-K)
+Due to the size taken to return the answer.
 ```
 
 ```java
 //Optimal:
+import java.util.*;
 
+class Solution {
+    // Function to get the maximum sliding window
+    public int[] maxSlidingWindow(int[] arr, int k) {
+        
+        int n = arr.length; // Size of array
+        
+        // To store the answer
+        int[] ans = new int[n - k + 1];
+        int ansIndex = 0;
+        
+        // Deque data structure
+        Deque<Integer> dq = new LinkedList<>();
+        
+        // Traverse the array
+        for (int i = 0; i < n; i++) {
+            
+            // Update deque to maintain current window
+            if (!dq.isEmpty() && dq.peekFirst() <= (i - k)) {
+                dq.pollFirst();
+            }
+            
+            /* Maintain the monotonic (decreasing) 
+            order of elements in deque */
+            while (!dq.isEmpty() && arr[dq.peekLast()] <= arr[i]) {
+                dq.pollLast();
+            }
+            
+            // Add current element's index to the deque
+            dq.offerLast(i);
+            
+            /* Store the maximum element from 
+            the first window possible */
+            if (i >= (k - 1)) {
+                ans[ansIndex++] = arr[dq.peekFirst()];
+            }
+        }
+        
+        // Return the stored result
+        return ans;
+    }
 
+    public static void main(String[] args) {
+        int[] arr = {4, 0, -1, 3, 5, 3, 6, 8};
+        int k = 3;
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        /* Function call to get the
+        maximum sliding window */
+        int[] ans = sol.maxSlidingWindow(arr, k);
+        
+        System.out.print("The maximum elements in the sliding window are: ");
+        for (int i = 0; i < ans.length; i++) {
+            System.out.print(ans[i] + " ");
+        }
+    }
+}
+
+Complexity Analysis:
+Time Complexity: O(N) (where N is the size of given array)
+
+The array is traversed once taking O(N) time.
+In the worst-case, each element is pushed in and popped out from deque only once taking O(N) time.
+Space Complexity: O(N-K) + O(K)
+
+The deque will store K elements at maximum, taking O(K) time.
 ```
 
 13. `Implement Min Stack `
 ```java
 //Brute:
+import java.util.*;
 
-```
+// Class to implement Minimum Stack
+class MinStack {
+    // Initialize a stack
+    private Stack<int[]> st;
 
-```java
-//Better:
+    // Empty Constructor
+    public MinStack() {
+        st = new Stack<>();
+    }
 
+    // Method to push a value in stack
+    public void push(int value) {
+        // If stack is empty
+        if (st.isEmpty()) {
+            // Push current value as minimum
+            st.push(new int[]{value, value});
+            return;
+        }
 
+        // Update the current minimum
+        int mini = Math.min(getMin(), value);
+
+        // Add the pair to the stack
+        st.push(new int[]{value, mini});
+    }
+
+    // Method to pop a value from stack
+    public void pop() {
+        // Using in-built pop method
+        st.pop();
+    }
+
+    // Method to get the top of stack
+    public int top() {
+        // Return the top value
+        return st.peek()[0];
+    }
+
+    // Method to get the minimum in stack
+    public int getMin() {
+        // Return the minimum
+        return st.peek()[1];
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MinStack s = new MinStack();
+
+        // Function calls
+        s.push(-2);
+        s.push(0);
+        s.push(-3);
+        System.out.print(s.getMin() + " ");
+        s.pop();
+        System.out.print(s.top() + " ");
+        s.pop();
+        System.out.print(s.getMin());
+    }
+}
+Complexity Analysis:
+Time Complexity: O(1) All the operations take constant time.
+
+Space Complexity: O(2*N) (where N is the total number of calls made for push operation)
+All the numbers are stored in pairs leading to a stack space of O(2*N).
 ```
 
 ```java
 //Optimal:
+import java.util.Stack;
 
+// Class to implement Minimum Stack
+class MinStack {
+    private Stack<Integer> st;
+    private int mini;
 
+    // Empty Constructor
+    public MinStack() {
+        st = new Stack<>();
+    }
+
+    // Method to push a value in stack
+    public void push(int value) {
+        // If stack is empty
+        if (st.isEmpty()) {
+            // Update the minimum value
+            mini = value;
+
+            // Push current value as minimum
+            st.push(value);
+            return;
+        }
+
+        // If the value is greater than the minimum
+        if (value > mini) {
+            st.push(value);
+        } else {
+            // Add the modified value to stack
+            st.push(2 * value - mini);
+            // Update the minimum
+            mini = value;
+        }
+    }
+
+    // Method to pop a value from stack
+    public void pop() {
+        // Base case
+        if (st.isEmpty()) return;
+
+        // Get the top
+        int x = st.pop();
+
+        // If the modified value was added to stack
+        if (x < mini) {
+            // Update the minimum
+            mini = 2 * mini - x;
+        }
+    }
+
+    // Method to get the top of stack
+    public int top() {
+        // Base case
+        if (st.isEmpty()) return -1;
+
+        // Get the top
+        int x = st.peek();
+
+        // Return top if minimum is less than the top
+        if (mini < x) return x;
+
+        // Otherwise return mini
+        return mini;
+    }
+
+    // Method to get the minimum in stack
+    public int getMin() {
+        // Return the minimum
+        return mini;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MinStack s = new MinStack();
+
+        // Function calls
+        s.push(-2);
+        s.push(0);
+        s.push(-3);
+        System.out.print(s.getMin() + " ");
+        s.pop();
+        System.out.print(s.top() + " ");
+        s.pop();
+        System.out.print(s.getMin());
+    }
+}
+
+Complexity Analysis:
+Time Complexity: O(1) All the operations take constant time.
+
+Space Complexity: O(N) (where N is the total number of calls made for push operation)
+As only one value per element is stored in the stack.
 ```
 
 14. `Rotten Oranges `
 ```java
-//Brute:
+import java.util.*;
 
-```
+class Solution {
+    // DelRow and delCol for neighbors
+    private int[] delRow = {-1, 0, 1, 0};
+    private int[] delCol = {0, 1, 0, -1};
+    
+    /* Helper Function to check if a 
+    cell is within boundaries */
+    private boolean isValid(int i, int j, 
+                            int n, int m) {
+        
+        // Return false if cell is invalid
+        if(i < 0 || i >= n) return false;
+        if(j < 0 || j >= m) return false;
+        
+        // Return true if cell is valid
+        return true;
+    }
+    
+    /* Function to find number of minutes 
+    so that all oranges get rotten */
+    public int orangesRotting(int[][] grid){
+        
+        // Get the dimensions of grid
+        int n = grid.length;
+        int m = grid[0].length;
+        
+        /* Variable to store time taken
+        to get all oranges rotten */
+        int time = 0;
+        
+        /* Variable to store 
+        total count of oranges */
+        int total = 0;
+        
+        /* Variable to store count of 
+         oranges that are rotten */
+        int count = 0;
+        
+        // Queue to perform BFS
+        Queue<int[]> q = new LinkedList<>();
+        
+        // Traverse the grid
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                
+                /* If cell contains orange, 
+                increment total */
+                if(grid[i][j] != 0) total++;
+                
+                /* If cell contains rotten 
+                 orange, push in queue */
+                if(grid[i][j] == 2) {
+                    q.add(new int[]{i, j});
+                }
+            }
+        }
+        
+        // Perform BFS
+        
+        // Until the queue is empty
+        while(!q.isEmpty()) {
+            
+            // Get the size of queue
+            int k = q.size();
+            
+            // Update count of rotten oranges
+            count += k;
+            
+            // Perform BFS for current level
+            while(k-- > 0) {
+                
+                // Get the cell from queue
+                int[] cell = q.poll();
+                
+                // Get its coordinates
+                int row = cell[0];
+                int col = cell[1];
+                
+                // Traverse its 4 neighbors
+                for(int i = 0; i < 4; i++) {
+                    
+                    // Coordinates of new cell
+                    int nRow = row + delRow[i]; 
+                    int nCol = col + delCol[i]; 
+                    
+                    /* check for valid, unvisited 
+                     cells having fresh oranges */
+                    if(isValid(nRow, nCol, n, m) && 
+                       grid[nRow][nCol] == 1) {
+                        
+                        /* Mark the new orange as rotten
+                        and add it to the queue */
+                        grid[nRow][nCol] = 2;
+                        q.add(new int[]{nRow, nCol});
+                    }
+                }
+            }
+            
+            /* If new oranges are rotten, then
+             the time must be incremented */
+            if(!q.isEmpty()) time++;
+        }
+        
+        /* If all the oranges are rotten,
+        return the time taken */
+        if(total == count) return time;
+        
+        // Otherwise return -1
+        return -1;
+    }
+    
+    public static void main(String[] args) {
+        int[][] grid = {
+            {2, 1, 1}, 
+            {1, 1, 0}, 
+            {0, 1, 1}
+        };
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        /* Function call to find number of minutes 
+        so that all oranges get rotten */
+        int ans = sol.orangesRotting(grid);
+        
+        System.out.println("The minimum number of minutes required for all oranges to rotten are: " + ans);
+    }
+}
 
-```java
-//Better:
 
+Complexity Analysis:
+Time Complexity: O(N*M) (where N and M are the dimensions of grid)
+In the worst case, each fresh orange in the grid will be rotten and for each rotten orange, its 4 neighbors are checked taking O(4*N*M) time.
 
-```
-
-```java
-//Optimal:
-
-
+Space Complexity: O(N*M)
+Using a queue data structure, which will store all cells if a grid is full of rotten oranges taking O(N*M) space.
 ```
 
 15. `Stock span problem `
 ```java
 //Brute:
+import java.util.*;
 
-```
+class Solution {
+    // Function to find the span of stock prices for each day
+    public int[] stockSpan(int[] arr, int n) {
+        
+        // To store the answer
+        int[] ans = new int[n];
+        
+        // Traverse on the array
+        for(int i = 0; i < n; i++) {
+            
+            // To store the current span of stocks
+            int currSpan = 0;
+            
+            // Traversing backwards to find stock span
+            for(int j = i; j >= 0; j--) {
+            
+                // Update stock span
+                if(arr[j] <= arr[i]) {
+                    currSpan++;
+                }
+                
+                // Else break out from loop
+                else break;
+            }
+            
+            // Store the current span
+            ans[i] = currSpan;
+        }
+        
+        // Return the result
+        return ans;
+    }
+    
+    public static void main(String[] args) {
+        int n = 7;
+        int[] arr = {120, 100, 60, 80, 90, 110, 115};
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        /* Function call to find the span 
+        of stock prices for each day */
+        int[] ans = sol.stockSpan(arr, n);
+        
+        System.out.print("The span of stock prices is: ");
+        for(int i = 0; i < n; i++) {
+            System.out.print(ans[i] + " ");
+        }
+    }
+}
+Complexity Analysis:
+Time Complexity: O(N2) (where N is the length of given array)
+Using two nested loops.
 
-```java
-//Better:
-
-
+Space Complexity: O(1)
+Using only a couple of variables.
 ```
 
 ```java
 //Optimal:
+import java.util.*;
 
+class Solution {
+    /* Function to find the indices of previous 
+    greater element for each element in the array */
+    private int[] findPGE(int[] arr) {
+        
+        int n = arr.length; //size of array
+        
+        // To store the previous greater elements
+        int[] ans = new int[n];
+        
+        // Stack to get elements in LIFO fashion
+        Stack<Integer> st = new Stack<>();
+        
+        // Start traversing from the front
+        for(int i = 0; i < n; i++) {
+            
+            // Get the current element
+            int currEle = arr[i];
+            
+            /* Pop the elements in the stack until 
+            the stack is not empty and the top 
+            element is not the greater element */
+            while(!st.isEmpty() && arr[st.peek()] <= currEle) {
+                st.pop();
+            }
+            
+            /* If the greater element is not 
+            found, stack will be empty */
+            if(st.isEmpty()) 
+                ans[i] = -1;
+                
+            // Else store the answer
+            else 
+                ans[i] = st.peek();
+            
+            // Push the current index in the stack 
+            st.push(i);
+        }
+        
+        // Return the result
+        return ans;
+    }
+    
+    // Function to find the span of stock prices for each day
+    public int[] stockSpan(int[] arr, int n) {
+        
+        // Get the indices of previous greater elements
+        int[] PGE = findPGE(arr);
+        
+        // To store the answer
+        int[] ans = new int[n];
+        
+        // Compute the result
+        for(int i = 0; i < n; i++) {
+            ans[i] = i - PGE[i];
+        }
+        
+        // Return the result
+        return ans;
+    }
+    
+    public static void main(String[] args) {
+        int n = 7;
+        int[] arr = {120, 100, 60, 80, 90, 110, 115};
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        /* Function call to find the span 
+        of stock prices for each day */
+        int[] ans = sol.stockSpan(arr, n);
+        
+        System.out.print("The span of stock prices is: ");
+        for(int i = 0; i < n; i++) {
+            System.out.print(ans[i] + " ");
+        }
+    }
+}
 
+Complexity Analysis:
+Time Complexity: O(N)
+
+Finding the indices of previous greater elements takes O(N) time.
+Traversing the array once to find the stock span taking O(N) time.
+Space Complexity: O(N)
+The stack space used to find the previous greater elements can go up to O(N) in the worst case.
 ```
 
 16. `Maximum of Minimums for Every Window Size `
 ```java
-//Brute:
+import java.util.*;
 
-```
+class Solution {
 
-```java
-//Better:
+    // Function to compute maximum of minimum for every window size
+    public List<Integer> maxOfMin(List<Integer> arr) {
 
+        // Store length of list
+        int n = arr.size();
 
-```
+        // Arrays to store previous and next smaller indices
+        int[] left = new int[n];
+        int[] right = new int[n];
 
-```java
-//Optimal:
+        // ------------------------------------------------------
+        // Step 1: Compute previous smaller element for each index
+        // ------------------------------------------------------
+        Stack<Integer> st = new Stack<>();
 
+        for (int i = 0; i < n; i++) {
 
+            // Pop until we find a strictly smaller element
+            while (!st.isEmpty() && arr.get(st.peek()) >= arr.get(i)) {
+                st.pop();
+            }
+
+            // If stack empty → none exists
+            left[i] = st.isEmpty() ? -1 : st.peek();
+
+            // Push current index
+            st.push(i);
+        }
+
+        // ------------------------------------------------------
+        // Step 2: Compute next smaller element
+        // ------------------------------------------------------
+        st.clear();
+
+        for (int i = n - 1; i >= 0; i--) {
+
+            // Pop until a strictly smaller element is found
+            while (!st.isEmpty() && arr.get(st.peek()) > arr.get(i)) {
+                st.pop();
+            }
+
+            // If empty → next smaller doesn't exist
+            right[i] = st.isEmpty() ? n : st.peek();
+
+            st.push(i);
+        }
+
+        // ------------------------------------------------------
+        // Step 3: Fill ans[len] with maximum minimum for each window length
+        // ------------------------------------------------------
+        int[] ans = new int[n + 1];
+        Arrays.fill(ans, Integer.MIN_VALUE);
+
+        for (int i = 0; i < n; i++) {
+
+            // Length for which arr[i] is the minimum value
+            int len = right[i] - left[i] - 1;
+
+            // Update best value
+            ans[len] = Math.max(ans[len], arr.get(i));
+        }
+
+        // ------------------------------------------------------
+        // Step 4: Propagate maximum values backwards
+        // ------------------------------------------------------
+        for (int len = n - 1; len >= 1; len--) {
+            ans[len] = Math.max(ans[len], ans[len + 1]);
+        }
+
+        // ------------------------------------------------------
+        // Step 5: Prepare final list
+        // ------------------------------------------------------
+        List<Integer> result = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            result.add(ans[i]);
+        }
+
+        return result;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        // Create input list
+        List<Integer> arr = Arrays.asList(10, 20, 30, 50, 10, 70, 30);
+
+        // Create solution object
+        Solution sol = new Solution();
+
+        // Compute result
+        List<Integer> result = sol.maxOfMin(arr);
+
+        // Print result
+        for (int x : result) {
+            System.out.print(x + " ");
+        }
+    }
+}
+Complexity Analysis
+Time Complexity: O(n). Previous smaller and next smaller take linear time using monotonic stacks. Each index is pushed and popped at most once. Filling and adjusting the result list also takes linear time.
+Space Complexity: O(n). Needed for previous smaller array, next smaller array, stack, and result list.
 ```
 
 17. `Celebrity Problem `
 ```java
 //Brute:
+import java.util.*;
 
-```
+class Solution {
+    // Function to find the index of celebrity
+    public int celebrity(int[][] M) {
+        
+        // Size of given matrix
+        int n = M.length;
+        
+        /* To store count of people who 
+        know person of index i */
+        int[] knowMe = new int[n];
+        
+        /* To store count of people who 
+        the person of index i knows */
+        int[] Iknow = new int[n];
+        
+        // Traverse on given matrix
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                
+                // If person i knows person j
+                if (M[i][j] == 1) {
+                    knowMe[j]++;
+                    Iknow[i]++;
+                }
+            }
+        }
+        
+        // Traverse for all persons to find the celebrity
+        for (int i = 0; i < n; i++) {
+            
+            // Return the index of celebrity
+            if (knowMe[i] == n - 1 && Iknow[i] == 0) {
+                return i;  
+            }
+        }
+        
+        // Return -1 if no celebrity is found
+        return -1;
+    }
 
-```java
-//Better:
+    public static void main(String[] args) {
+        int[][] M = {
+            {0, 1, 1, 0}, 
+            {0, 0, 0, 0}, 
+            {1, 1, 0, 0}, 
+            {0, 1, 1, 0}
+        };
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        // Function call to find the index of celebrity
+        int ans = sol.celebrity(M);
+        
+        System.out.println("The index of celebrity is: " + ans);
+    }
+}
+Complexity Analysis:
+Time Complexity: O(N2), as Traversing the given square matrix to populate the two lists takes O(N2) time and Traversing on the lists to identify the celebrity takes O(N) time.
 
-
+Space Complexity: O(N), The two lists to store the count of how many people each person knows and how many people know each person takes O(N) space each.
 ```
 
 ```java
 //Optimal:
+import java.util.*;
 
+class Solution {
+    // Function to find the index of celebrity
+    public int celebrity(int[][] M) {
+        
+        // Size of given matrix
+        int n = M.length;
+        
+        // Top and Down pointers
+        int top = 0, down = n - 1;
+        
+        // Traverse for all the people
+        while (top < down) {
+            
+            /* If top knows down, 
+            it can not be a celebrity */
+            if (M[top][down] == 1) {
+                top = top + 1;
+            }
+            
+            /* If down knows top, 
+            it can not be a celebrity */
+            else if (M[down][top] == 1) {
+                down = down - 1;
+            }
+            
+            /* If both do not know each other, 
+            both cannot be the celebrity */
+            else {
+                top++;
+                down--;
+            }
+        }
+        
+        // Return -1 if no celebrity is found
+        if (top > down) return -1;
+        
+        /* Check if the person pointed 
+        by top is celebrity */
+        for (int i = 0; i < n; i++) {
+            if (i == top) continue;
+            
+            // Check if it is not a celebrity
+            if (M[top][i] == 1 || M[i][top] == 0) {
+                return -1;
+            }
+        }
+        
+        // Return the index of celebrity
+        return top;
+    }
 
+    public static void main(String[] args) {
+        int[][] M = {
+            {0, 1, 1, 0}, 
+            {0, 0, 0, 0}, 
+            {1, 1, 0, 0}, 
+            {0, 1, 1, 0}
+        };
+        
+        /* Creating an instance of 
+        Solution class */
+        Solution sol = new Solution(); 
+        
+        // Function call to find the index of celebrity
+        int ans = sol.celebrity(M);
+        
+        System.out.println("The index of celebrity is: " + ans);
+    }
+}
+
+Complexity Analysis:
+Time Complexity: O(N) (where N is the size of given square matrix)
+
+Eliminating persons takes O(N) time.
+Checking if the last candidate is a celebrity takes O(N) time.
+Space Complexity: O(1)
+Using only a couple of variables.
 ```
