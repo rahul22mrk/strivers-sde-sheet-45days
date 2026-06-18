@@ -531,6 +531,142 @@ Space Complexity: O(N) We use O(N) space for recursion (function call stack) and
 
 ```
 
+```java
+class Solution {
+    public List<String> permuteUnique(String s) {
+        Set<String> ans = new HashSet<>();
+
+        boolean freq[] = new boolean[s.length()];
+
+        solve(s, new StringBuilder(), ans, freq);
+        List<String> list =  new ArrayList<>(ans);
+        Collections.sort(list);
+        return list;
+    }
+
+    private void solve(String s, StringBuilder curr, Set<String> ans, boolean freq[]){
+        if(s.length() == curr.length()){
+            ans.add(curr.toString());
+            return ;
+        }
+
+        for(int i=0; i<s.length(); i++){
+            if(!freq[i]){
+                freq[i] = true;
+                curr.append(s.charAt(i));
+                solve(s,curr,ans,freq);
+
+                curr.deleteCharAt(curr.length() - 1);
+                freq[i] = false;
+            }
+        }
+    }
+}
+
+
+```
+
+```java
+class Solution {
+    public List<String> permuteUnique(String s) {
+        char arr[] = s.toCharArray();
+
+        Set<String> ans = new HashSet<>();
+        solve(0, arr, ans);
+        List<String> list = new ArrayList<>(ans);
+        Collections.sort(list);
+        return list;
+    }
+
+    private void solve(int idx, char arr[], Set<String> ans){
+        if(idx == arr.length){
+            StringBuilder sb = new StringBuilder();
+
+            for(char ch: arr){
+                sb.append(ch);
+            }
+            ans.add(sb.toString());
+        }
+
+        for(int i=idx; i<arr.length; i++){
+            swap(arr, idx, i);
+            solve(idx+1, arr, ans);
+            swap(arr, idx, i);
+        }
+    }
+
+    private void swap(char []arr, int i, int j){
+        char ch = arr[i];
+        arr[i] = arr[j];
+        arr[j] = ch;
+    }
+}
+
+
+```
+
+7.1 `46. Permutations`
+```java
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        boolean[] freq  = new boolean[nums.length];
+        recurPermute(nums,new ArrayList<>(),res,freq);
+        return res;
+        
+    }
+
+    private void recurPermute(int []nums,List<Integer>current,List<List<Integer>>res,boolean[] freq){
+        if(current.size()==nums.length){
+            res.add(new ArrayList<>(current));
+            return;
+        }
+
+        for(int i=0;i<nums.length;i++){
+            if(!freq[i]){
+                freq[i]=true;
+                current.add(nums[i]);
+                recurPermute(nums,current,res,freq);
+                freq[i]=false;
+                current.remove(current.size()-1);
+            }
+        }
+    }
+}
+```
+
+```java
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        solve(0,nums,ans);
+        return ans;
+    }
+
+    private void solve(int idx, int[]nums, List<List<Integer>>ans){
+        if(idx==nums.length){
+            List<Integer> temp = new ArrayList();
+            for(int num : nums){
+                temp.add(num);
+            }
+            ans.add(temp);
+            return ;
+        }
+
+        for(int i=idx;i<nums.length;i++){
+            swap(nums,i,idx);
+            solve(idx+1,nums,ans);
+            swap(nums,i,idx);
+        }
+    }
+
+    private void swap(int nums[], int i, int idx){
+        int temp = nums[i];
+        nums[i] = nums[idx];
+        nums[idx] = temp;
+    }
+}
+```
 
 8. `N Queen`
 ```java
