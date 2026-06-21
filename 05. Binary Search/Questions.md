@@ -10,6 +10,31 @@
 ********************************************************************************************
 
 1. `The N-th root of an integer `
+```My Solution
+ class Solution {
+    public int NthRoot(int N, int M) {
+        int low = 1;
+        int high = M;
+
+        while(low <= high){
+            int mid = low + (high - low)/2;
+
+            int pow = (int)Math.pow(mid, N);
+            if(M == pow ){
+                return mid;
+            }else if(M < pow){
+                high = mid-1;
+            }else{
+                low = mid + 1;
+            }
+        }
+        return -1;
+    }
+}
+
+```
+
+
 ```java
 //Linear Search
 
