@@ -64,22 +64,8 @@ class Solution {
         return ans.toString(); // Return the stored result
     }
 }
-
-class Main {
-    public static void main(String[] args) {
-        String s = " amazing coding skills ";
-        
-        // Creating an instance of Solution class
-        Solution sol = new Solution();
-        
-        // Function call to reverse every word in the given string
-        String ans = sol.reverseWords(s);
-        
-        // Output
-        System.out.println("Input string: " + s);
-        System.out.println("After reversing every word: " + ans);
-    }
-}
+```
+```
 Complexity Analysis:
 Time Complexity: O(n) (where n is the length of the input string)
 
@@ -156,21 +142,8 @@ class Solution {
     }
 }
 
-class Main {
-    public static void main(String[] args) {
-        String s = " amazing coding skills ";
-
-        // Creating an instance of Solution class
-        Solution sol = new Solution();
-
-        // Function call to reverse every word in the given string
-        String ans = sol.reverseWords(s);
-
-        // Output
-        System.out.println("Input string: " + s);
-        System.out.println("After reversing every word: " + ans);
-    }
-}
+```
+```
 Complexity Analysis:
 Time Complexity: O(n) (where n is the length of the input string)
 
@@ -229,15 +202,8 @@ class Solution {
         return s.substring(start, end + 1);
     }
 }
-
-// Driver class
-public class Main {
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        String s = "babad";
-        System.out.println(sol.longestPalindrome(s)); // Output: "bab" or "aba"
-    }
-}
+```
+```
 Time and Space Complexity
 Time Complexity: O(n²), where n is the length of the string. For each character, we expand around it for both odd and even length palindromes, which takes O(n) for each center.
 Space Complexity: O(1), as we only use a few variables to track indices and do not allocate extra space proportional to the input size.
@@ -272,13 +238,8 @@ class Solution {
         return total;
     }
 }
-
-class Main {
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        System.out.println(sol.romanToInt("MCMXCIV"));
-    }
-}
+```
+```
 Time and Space Complexity
 Time Complexity: O(n), where n is the length of the Roman numeral string. Each character is processed once, with constant-time lookups in the mapping.
 Space Complexity: O(1), since the mapping of Roman symbols is constant in size and no additional data structures grow with input length.
@@ -326,19 +287,8 @@ class Solution {
         return (int)(result * sign);
     }
 }
-
-public class Main {
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        
-        // Example input
-        String input = "42";
-        
-        // Output the result of converting the string to an integer
-        int result = sol.myAtoi(input);
-        System.out.println(result);  // Expected output: 42
-    }
-}
+```
+```
 Complexity Analysis
 Time Complexity: O(n), where n is the length of the string. We scan the string once.
 Space Complexity: O(1), as we use a constant amount of extra space.
@@ -384,19 +334,8 @@ class Solution {
         return (int)(result * sign);
     }
 }
-
-public class Main {
-    public static void main(String[] args) {
-        Solution sol = new Solution();
-        
-        // Example input
-        String input = "42";
-        
-        // Output the result of converting the string to an integer
-        int result = sol.myAtoi(input);
-        System.out.println(result);  // Expected output: 42
-    }
-}
+```
+```
 Complexity Analysis
 Time Complexity: O(n), where n is the length of the string. Each character is processed once.
 Space Complexity: O(1), since only a fixed number of variables are used.
@@ -434,15 +373,9 @@ class Solution {
         // Return the longest common prefix found
         return ans.toString();
     }
-    
-    // Main method to test the longestCommonPrefix method
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        String[] input = {"flower", "flow", "flight"};
-        String result = solution.longestCommonPrefix(input);
-        System.out.println("Longest Common Prefix: " + result); // Output: "fl"
-    }
 }
+```
+```
 Complexity Analysis
 Time Complexity: O(N * M * log N), where N is the number of strings and M is the maximum length of a string.
 The sorting operation takes O(N * M * log N) time because:
@@ -494,23 +427,8 @@ class Solution {
     }
 }
 
-class Main {
-    public static void main(String[] args) {
-        String txt = "ababcabcababc";
-        String pat = "abc";
-
-        // Creating an instance of Solution class
-        Solution sol = new Solution();
-
-        /* Function call to find the starting index
-           of all occurrences of pattern in text */
-        List<Integer> ans = sol.search(pat, txt);
-
-        // Output
-        System.out.print("The starting indices of all occurrences of " + pat + " in " + txt + " are: ");
-        for (int it : ans) System.out.print(it + " ");
-    }
-}
+```
+```
 Complexity Analysis:
 Time Complexity: O(M*N) (where M and N are the lengths of text and pattern respectively)
 The outer loop iterates (M-N+1) times. For each position, the inner loop (the character-by-character comparison between the pattern and text) takes O(N) time in the worst case. taking overall O(M*N) time.
@@ -571,24 +489,9 @@ class Solution {
     }
 }
 
-class Main {
-    public static void main(String[] args) {
-        String txt = "ababcabcababc";
-        String pat = "abc";
+```
 
-        // Creating an instance of Solution class
-        Solution sol = new Solution();
-
-        /* Function call to find the starting index
-           of all occurrences of pattern in text */
-        List<Integer> ans = sol.search(pat, txt);
-
-        // Output
-        System.out.print("The starting indices of all occurrences of " + pat + " in " + txt + " are: ");
-        for (int it : ans) System.out.print(it + " ");
-    }
-}
-
+```
 Complexity Analysis:
 Time Complexity: O(M), where M is the length of the text string.
 
