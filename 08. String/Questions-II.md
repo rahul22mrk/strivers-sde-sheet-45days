@@ -14,17 +14,14 @@
 ************************************************************************************
 
 
-7. `Z function ````java
+7. `Z function 
 
 ```java
 
 ```
 
-```java
 
-```
-
-8. `KMP Algorithm or LPS array ````java
+8. `KMP Algorithm or LPS array 
 
 
 ```java
@@ -164,7 +161,7 @@ Note that the total number of backtracking steps (decrementing j via LPS[j-1]) a
 ```
 
 
-9. `Minimum insertions to make string palindrome ````java
+9. `Minimum insertions to make string palindrome` 
 
 
 ```java
@@ -216,7 +213,8 @@ class Solution {
         its longest palindromic subsequence length*/
         return n - k;
     }
-}```
+}
+```
 
 ```
 Complexity Analysis:
@@ -274,7 +272,8 @@ class Solution {
         its longest palindromic subsequence length*/
         return n - k;
     }
-}```
+}
+```
 
 ```
 Complexity Analysis:
@@ -284,7 +283,7 @@ Space Complexity: O(N), We are using an external array of size ‘N+1’ to stor
 ```
 
 
-10. `Valid Anagram ````java
+10. `Valid Anagram `
 
 
 ```java
@@ -305,7 +304,8 @@ class Solution {
         // Compare sorted arrays
         return Arrays.equals(sArray, tArray);
     }
-}```
+}
+```
 
 ```
 Complexity Analysis
@@ -353,7 +353,7 @@ Space Complexity: O(1), as there is always a constant-size array (of length 26) 
 ```
 
 
-11. `Count and say ````java
+11. `Count and say `
 
 
 
@@ -409,9 +409,7 @@ The recursive stack space will take O(n) space and during each step, the string 
 ```
 
 
-12. `Compare version numbers ````java
-
-
+12. `Compare version numbers `
 
 ```java
 import java.util.*;
@@ -438,9 +436,11 @@ class Solution {
     }
 }
 ```
-
 ```
 Time and Space Complexity
 Time Complexity: O(n), where n is the number of segments in the longer version string, since we split and compare each segment once.
 Space Complexity: O(n), as we store the split segments of both version strings for comparison.
 ```
+
+
+
