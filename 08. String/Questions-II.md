@@ -14,14 +14,14 @@
 ************************************************************************************
 
 
-7. `Z function 
+7. `Z function` 
 
 ```java
 
 ```
 
 
-8. `KMP Algorithm or LPS array 
+8. `KMP Algorithm or LPS array` 
 
 
 ```java
