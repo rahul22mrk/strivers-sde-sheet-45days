@@ -1,4 +1,4 @@
-#01. Binary Tree Part - I
+# Binary Tree Part - I
 
 1. `Inorder Traversal `
 2. `Preorder Traversal `
@@ -14,7 +14,7 @@
 12. `Maximum Width of BT `
 
 
-#02. Binary Tree Part - II
+# Binary Tree Part - II
 
 13. `Level Order Traversal `
 14. `Maximum Depth in BT `
@@ -27,7 +27,7 @@
 
 
 
-#03. Binary Tree Part - III
+# Binary Tree Part - III
 
 21. `Maximum path sum `
 22. `Construct a BT from Preorder and Inorder `
@@ -39,7 +39,7 @@
 
 
     
-#04. Binary Trees - Miscellaneous
+# Binary Trees - Miscellaneous
 
 28. `Binary Tree to Doubly Linked List `
 29. `Find Median in a Stream `
