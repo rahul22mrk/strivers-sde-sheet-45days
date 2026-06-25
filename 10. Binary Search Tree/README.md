@@ -7,7 +7,7 @@
 6. `LCA in BST `
 7. `Inorder successor and predecessor in BST `
 
-#Binary Search Tree Part-II
+# Binary Search Tree Part-II
 8. `Floor in a BST `
 9. `Ceil in a BST `
 10. `Find K-th smallest element in BST `
