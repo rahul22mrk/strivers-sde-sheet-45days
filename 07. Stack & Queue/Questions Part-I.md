@@ -536,6 +536,28 @@ Traversing the array takes O(N) time, and traversing the stack will take overall
 Space Complexity: O(N)
 The answer array takes O(N) space, and the space used by the stack will be O(N) in the worst case.
 ```
+```java
+My Solution
+
+class Solution {
+    public int[] nextLargerElement(int[] arr) {
+        int n = arr.length;
+        int ans[] = new int[n];
+        Arrays.fill(ans, -1);
+        Stack<Integer> st = new Stack<>();
+
+        for(int i=0;i<n;i++){
+            while(!st.isEmpty() && arr[st.peek()] < arr[i]){
+                ans[st.pop()] = arr[i];
+            }
+            st.push(i);
+        }
+
+        return ans;
+    }
+}
+
+```
 
 7. `Sort a Stack `
 ```java
